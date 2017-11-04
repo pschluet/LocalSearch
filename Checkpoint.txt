@@ -1,0 +1,13 @@
+Hello Dear DL Students,
+
+ 
+As you might have noticed, the final project has been released! Please note that the midpoint project checkpoint is due on November 23rd. The purpose of the checkpoint is to encourage you all to work on the project, and so that we can give you preliminary feedback.  
+ 
+Below are the requirements for the checkpoints (I will also release these requirements as a PDF when opening the assignment): 
+ 
+The partial report for the project should be 1-2 pages long and include **description (details and pseudocode)** and **preliminary results** on at least 1 of the algorithms you need to develop. You should include a partially filled 'Table of results' as is shown in the Evaluation Section of the Project description. The checkpoint report should also include an outline of your ideas for the remaining algorithm.
+ 
+Note that if your algorithm has random components then you should present results based on averaging multiple runs of your algorithm using different seeds. A 10 minute time cutoff for the local search should be used. You can optionally include QRTDs in addition to the Table results if you want feedback on them.
+ 
+Thanks,
+Caleb
