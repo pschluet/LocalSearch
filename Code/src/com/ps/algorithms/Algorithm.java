@@ -1,23 +1,24 @@
 package com.ps.algorithms;
 
 import com.ps.InputArgs;
-import org.jgrapht.Graphs;
 import org.jgrapht.UndirectedGraph;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public abstract class Algorithm {
 
     protected UndirectedGraph graph;
     protected int randomSeed;
     protected int cutoffTimeSec;
+    protected Random randomGenerator;
 
     public Algorithm(UndirectedGraph graph, InputArgs args) {
         this.graph = graph;
-        this.randomSeed = args.getRandomSeed();
         this.cutoffTimeSec = args.getCutoffTimeSec();
+        // Set random seed
+        this.randomGenerator = new Random(args.getRandomSeed());
 
     }
 
