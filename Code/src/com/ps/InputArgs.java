@@ -43,19 +43,19 @@ public class InputArgs {
         //exec -inst <filename> -alg [BnB|Approx|LS1|LS2] -time <cutoff in seconds> -seed <random seed>
 
         Option input1 = new Option("inst", "fileName", true, "input file path");
-        input.setRequired(true);
+        input1.setRequired(true);
         options.addOption(input1);
 
         Option input2 = new Option("alg", "algorithm", true, "algorithm to use");
-        input.setRequired(true);
+        input2.setRequired(true);
         options.addOption(input2);
 
         Option input3 = new Option("time", "time", true, "time cutoff in sec");
-        input.setRequired(true);
+        input3.setRequired(true);
         options.addOption(input3);
 
         Option input4 = new Option("seed", "seed", true, "random seed");
-        input.setRequired(true);
+        input4.setRequired(true);
         options.addOption(input4);
 
         CommandLineParser parser = new DefaultParser();

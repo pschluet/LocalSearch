@@ -8,15 +8,17 @@ import com.ps.enums.AlgorithmType;
 import com.ps.fileIO.Utils;
 import org.jgrapht.UndirectedGraph;
 
+import java.io.FileNotFoundException;
+
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
 
         // Parse input arguments
-        InputArgs inputArgs = InputArgs(args);
+        InputArgs inputArgs = new InputArgs(args);
 
         // Read input data
-        UndirectedGraph graph = Utils.readDataFile(inputArgs.fileName);
+        UndirectedGraph graph = Utils.readDataFile("../Data/" + inputArgs.fileName);
 
         // Run one of the algorithms depending on the command line arguments supplied
         Algorithm algorithm;
@@ -28,7 +30,7 @@ public class Main {
         Solution solution = algorithm.run();
 
         // Write the output files
-        Utils.writeSolutionFile(solution, inputArgs);
-        Utils.writeTraceFile(solution, inputArgs);
+        Utils.writeSolutionFile(solution, "../output/" + inputArgs.getFileNameBase() + ".sol");
+        Utils.writeTraceFile(solution, "../output/" + inputArgs.getFileNameBase() + ".trace");
     }
 }

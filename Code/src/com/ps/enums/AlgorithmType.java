@@ -6,9 +6,13 @@ public enum AlgorithmType {
 
     @Override
     public String toString() {
+        String out = "invalid";
+
         switch(this) {
-            case LocalSearch1: return "LS1";
-            case LocalSearch2: return "LS2";
+            case LocalSearch1: out = "LS1"; break;
+            case LocalSearch2: out = "LS2"; break;
         }
+
+        return out;
     }
 }

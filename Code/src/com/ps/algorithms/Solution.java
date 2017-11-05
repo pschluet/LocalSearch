@@ -6,12 +6,11 @@ import java.util.List;
 public class Solution {
     protected List<Integer> vertexCoverNodes;
     protected List<TracePoint> tracePoints;
-    protected final long startTimeNs;
+    protected long startTimeNs;
 
     public Solution() {
         vertexCoverNodes = new ArrayList<Integer>();
         tracePoints = new ArrayList<TracePoint>();
-        startTimeNs = System.nanoTime(); // Start timing when object is instantiated
     }
 
     public List<Integer> getVertexCoverNodes() {
@@ -30,5 +29,13 @@ public class Solution {
 
     public List<TracePoint> getTracePoints() {
         return tracePoints;
+    }
+
+    public int getBestQualityAchieved() {
+        return tracePoints.get(tracePoints.size() - 1).quality;
+    }
+
+    public void startTiming() {
+        startTimeNs = System.nanoTime();
     }
 }
