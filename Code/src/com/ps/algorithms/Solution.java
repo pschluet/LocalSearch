@@ -1,5 +1,10 @@
 package com.ps.algorithms;
 
+/*
+This class contains all the data components that are necessary for writing the output files. It is populated
+as the algorithms run.
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 

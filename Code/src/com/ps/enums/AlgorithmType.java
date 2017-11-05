@@ -1,5 +1,9 @@
 package com.ps.enums;
 
+/*
+This is an enum used in the code to determine which algorithm to run.
+ */
+
 public enum AlgorithmType {
     LocalSearch1,
     LocalSearch2;

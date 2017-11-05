@@ -1,5 +1,10 @@
 package com.ps.algorithms;
 
+/*
+This is a base class for the algorithm classes. Common code resides here, and the specific algorithm implementations
+(LocalSearchAlgorithm1 and LocalSearchAlgorithm2) extend this class.
+ */
+
 import com.ps.InputArgs;
 import org.jgrapht.UndirectedGraph;
 

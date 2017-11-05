@@ -1,5 +1,9 @@
 package com.ps.algorithms;
 
+/*
+This file contains the implementation of the second local search algorithm.
+ */
+
 import com.ps.InputArgs;
 import org.jgrapht.UndirectedGraph;
 

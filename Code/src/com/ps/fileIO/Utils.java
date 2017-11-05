@@ -1,5 +1,9 @@
 package com.ps.fileIO;
 
+/*
+This file contains code for file IO (reading input data, and writing output files)
+ */
+
 import com.ps.algorithms.Solution;
 import com.ps.algorithms.TracePoint;
 import org.jgrapht.UndirectedGraph;

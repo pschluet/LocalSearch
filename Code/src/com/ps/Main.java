@@ -1,5 +1,9 @@
 package com.ps;
 
+/*
+This file is the main entry point to the code and contains the high-level program flow.
+ */
+
 import com.ps.algorithms.Algorithm;
 import com.ps.algorithms.LocalSearchAlgorithm1;
 import com.ps.algorithms.LocalSearchAlgorithm2;

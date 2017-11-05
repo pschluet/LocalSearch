@@ -1,7 +1,9 @@
 package com.ps;
 
+/*
+This file contains logic for parsing the command-line arguments.
+ */
 
-import com.ps.algorithms.Algorithm;
 import com.ps.enums.AlgorithmType;
 import org.apache.commons.cli.*;
 

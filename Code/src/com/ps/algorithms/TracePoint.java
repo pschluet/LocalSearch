@@ -1,5 +1,9 @@
 package com.ps.algorithms;
 
+/*
+This is used to capture quality vs. time results as the algorithm runs.
+ */
+
 public class TracePoint {
     protected double timeSec;
     protected int quality;
