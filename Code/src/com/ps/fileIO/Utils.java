@@ -11,7 +11,9 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class Utils {
     public static UndirectedGraph readDataFile(String filePath) {
@@ -65,7 +67,7 @@ public class Utils {
             writer.write(String.format("%d\n",solution.getBestQualityAchieved()));
 
             // Write out vertex cover nodes
-            List<Integer> vcNodes = solution.getVertexCoverNodes();
+            List<Integer> vcNodes = new ArrayList<>(solution.getVertexCoverNodes());
             for (int i = 0; i < vcNodes.size() - 1; i++) {
                 writer.write(String.format("%d,", vcNodes.get(i)));
             }

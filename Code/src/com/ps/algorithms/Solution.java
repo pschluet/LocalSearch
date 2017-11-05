@@ -2,34 +2,34 @@ package com.ps.algorithms;
 
 /*
 This class contains all the data components that are necessary for writing the output files. It is populated
-as the algorithms run.
+as the algorithms run. It also handles keeping track of algorithm running times.
  */
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Solution {
-    protected List<Integer> vertexCoverNodes;
+    protected Set<Integer> vertexCoverNodes;
     protected List<TracePoint> tracePoints;
     protected long startTimeNs;
 
     public Solution() {
-        vertexCoverNodes = new ArrayList<Integer>();
+        vertexCoverNodes = new HashSet<Integer>();
         tracePoints = new ArrayList<TracePoint>();
     }
 
-    public List<Integer> getVertexCoverNodes() {
+    public Set<Integer> getVertexCoverNodes() {
         return vertexCoverNodes;
     }
 
-    public void setVertexCoverNodes(List<Integer> vertexCoverNodes) {
+    public void setVertexCoverNodes(Set<Integer> vertexCoverNodes) {
         this.vertexCoverNodes = vertexCoverNodes;
     }
 
     public void addTracePoint(int quality) {
-        long currentTimeNs = System.nanoTime();
-        double elapsedTimeSec = (double)(currentTimeNs - startTimeNs) * 1E-9;
-        tracePoints.add(new TracePoint(elapsedTimeSec, quality));
+        tracePoints.add(new TracePoint(getElapsedTimeSec(), quality));
     }
 
     public List<TracePoint> getTracePoints() {
@@ -42,5 +42,10 @@ public class Solution {
 
     public void startTiming() {
         startTimeNs = System.nanoTime();
+    }
+
+    public double getElapsedTimeSec() {
+        long currentTimeNs = System.nanoTime();
+        return (double)(currentTimeNs - startTimeNs) * 1E-9;
     }
 }

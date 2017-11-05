@@ -8,9 +8,7 @@ This is a base class for the algorithm classes. Common code resides here, and th
 import com.ps.InputArgs;
 import org.jgrapht.UndirectedGraph;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public abstract class Algorithm {
 
@@ -42,9 +40,8 @@ public abstract class Algorithm {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        List<Integer> vertices = new ArrayList<Integer>();
-        vertices.addAll(graph.vertexSet());
-        soln.setVertexCoverNodes(vertices);
+
+        soln.setVertexCoverNodes(graph.vertexSet());
 
         return soln;
     };
