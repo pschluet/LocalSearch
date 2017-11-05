@@ -10,7 +10,6 @@ import java.util.Random;
 public abstract class Algorithm {
 
     protected UndirectedGraph graph;
-    protected int randomSeed;
     protected int cutoffTimeSec;
     protected Random randomGenerator;
 
