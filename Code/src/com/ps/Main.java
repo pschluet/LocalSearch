@@ -27,11 +27,11 @@ public class Main {
         // Run one of the algorithms depending on the command line arguments supplied
         Algorithm algorithm;
         if (inputArgs.getAlgorithmType() == AlgorithmType.LocalSearch1)
-            algorithm = new LocalSearchAlgorithm1(graph, inputArgs);
+            algorithm = new LocalSearchAlgorithm1(inputArgs);
         else
-            algorithm = new LocalSearchAlgorithm2(graph, inputArgs);
+            algorithm = new LocalSearchAlgorithm2(inputArgs);
 
-        Solution solution = algorithm.run();
+        Solution solution = algorithm.run(graph);
 
         // Write the output files
         Utils.writeSolutionFile(solution, "../output/" + inputArgs.getFileNameBase() + ".sol");

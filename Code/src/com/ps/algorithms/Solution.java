@@ -37,7 +37,15 @@ public class Solution {
     }
 
     public int getBestQualityAchieved() {
-        return tracePoints.get(tracePoints.size() - 1).quality;
+        int bestQuality;
+
+        if (tracePoints.size() == 0) {
+            bestQuality = Integer.MAX_VALUE; // Higher numbers are worse
+        } else {
+            bestQuality = tracePoints.get(tracePoints.size() - 1).quality;
+        }
+
+        return bestQuality;
     }
 
     public void startTiming() {
