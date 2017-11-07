@@ -6,10 +6,12 @@ This is a base class for the algorithm classes. Common code resides here, and th
  */
 
 import com.ps.InputArgs;
+import org.jgrapht.Graphs;
 import org.jgrapht.UndirectedGraph;
 import org.jgrapht.alg.interfaces.MinimumVertexCoverAlgorithm;
 import org.jgrapht.alg.vertexcover.GreedyVCImpl;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleGraph;
 
 import java.util.*;
 
@@ -60,10 +62,36 @@ public abstract class Algorithm {
     }
 
     protected Set<Integer> getInitialVertexCover(final UndirectedGraph graph) {
-        // TODO: Implement this method myself
-        MinimumVertexCoverAlgorithm<Integer, DefaultEdge> mvc = new GreedyVCImpl<>();
-        MinimumVertexCoverAlgorithm.VertexCover<Integer> vertexCover = mvc.getVertexCover(graph);
-        return new HashSet<Integer>(vertexCover.getVertices());
+        // This implements the APPROX-VERTEX-COVER algorithm from page 1109 of
+        // the CLRS Algorithms textbook (3rd Edition)
+
+
+        // Make a copy of the input graph
+        UndirectedGraph<Integer, DefaultEdge> changingGraph = new SimpleGraph<Integer, DefaultEdge>(DefaultEdge.class);
+        Graphs.addGraph(changingGraph, graph);
+
+        Set<Integer> vertexCover = new HashSet<>();
+
+        while (changingGraph.edgeSet().size() > 0) {
+            // Pick random edge in remaining edge set
+            DefaultEdge nextEdge = changingGraph.edgeSet().iterator().next();
+
+            // Get source (u) and target (v) of the current edge
+            int u = changingGraph.getEdgeSource(nextEdge);
+            int v = changingGraph.getEdgeTarget(nextEdge);
+
+            // Add both vertices to the vertex cover
+            vertexCover.add(u);
+            vertexCover.add(v);
+
+            // Remove every edge connected to u and v
+            Set<DefaultEdge> edgesConnectedToU = new HashSet<>(changingGraph.edgesOf(u));
+            Set<DefaultEdge> edgesConnectedToV = new HashSet<>(changingGraph.edgesOf(v));
+            changingGraph.removeAllEdges(edgesConnectedToU);
+            changingGraph.removeAllEdges(edgesConnectedToV);
+        }
+
+        return vertexCover;
     }
 
     protected boolean isVertexCover(final Set<Integer> solutionToCheck, final UndirectedGraph graph) {
