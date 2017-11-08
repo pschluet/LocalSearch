@@ -33,6 +33,7 @@ public abstract class Algorithm {
 
         // Get initial vertex cover
         Set<Vertex> vertexCoverCandidate = getInitialVertexCover(graph);
+        updateScores(vertexCoverCandidate, graph);
 
         while (soln.getElapsedTimeSec() < cutoffTimeSec) {
             if (isVertexCover(vertexCoverCandidate, graph)) {
@@ -47,15 +48,18 @@ public abstract class Algorithm {
 
                 // Remove certain number of vertices and continue the search (see child classes for implementation)
                 removeVertices(vertexCoverCandidate);
+                updateScores(vertexCoverCandidate, graph);
             }
 
             // Select some vertices to remove from the candidate solution (see child classes for implementation)
             Set<Vertex> exitingVertices = selectExitingVertices(vertexCoverCandidate, graph);
             vertexCoverCandidate.removeAll(exitingVertices);
+            updateScores(vertexCoverCandidate, graph);
 
             // Select some vertices to add to the candidate solution (see child classes for implementation)
             Set<Vertex> enteringVertices = selectEnteringVertices(vertexCoverCandidate, graph);
             vertexCoverCandidate.addAll(enteringVertices);
+            updateScores(vertexCoverCandidate, graph);
         }
 
         return soln;
@@ -111,15 +115,8 @@ public abstract class Algorithm {
     }
 
     protected void removeNumberOfVertices(Set<Vertex> inputVertices, int numberOfVerticesToRemove) {
-        // TODO: Actually make this random
         // Remove the specified number of vertices from the set
-        int numRemoved = 0;
-        Iterator<Vertex> iter = inputVertices.iterator();
-        while (iter.hasNext() && numRemoved < numberOfVerticesToRemove) {
-            iter.next();
-            iter.remove();
-            numRemoved++;
-        }
+        inputVertices.removeAll(getVerticesWithHighestScores(inputVertices, numberOfVerticesToRemove));
     }
 
     protected int getQuality(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph) {
@@ -147,6 +144,41 @@ public abstract class Algorithm {
         return numUncoveredEdges;
     }
 
+    protected void updateScores(final Set<Vertex> vertexCoverCandidate, UndirectedGraph graph) {
+        int currentCost = getCost(vertexCoverCandidate, graph);
+
+        for (Vertex v : (Set<Vertex>)graph.vertexSet()) {
+            int newStateCost;
+            if (vertexCoverCandidate.contains(v)) {
+                vertexCoverCandidate.remove(v);
+                newStateCost = getCost(vertexCoverCandidate, graph);
+                vertexCoverCandidate.add(v);
+            } else {
+                vertexCoverCandidate.add(v);
+                newStateCost = getCost(vertexCoverCandidate, graph);
+                vertexCoverCandidate.remove(v);
+            }
+            v.setScore(currentCost - newStateCost);
+        }
+    }
+
+    protected Set<Vertex> getVerticesWithHighestScores(final Set<Vertex> vertexCoverCandidate, int numVertices) {
+        // Sort by score
+        List<Vertex> sortedVertices = new ArrayList<>(vertexCoverCandidate);
+        Collections.sort(sortedVertices, new Comparator<Vertex>() {
+            @Override
+            public int compare(Vertex o1, Vertex o2) {
+                return o2.getScore() - o1.getScore();
+            }
+        });
+
+        // Get the vertices with the highest scores
+        Set<Vertex> highScoreVertices = new HashSet<>();
+        highScoreVertices.addAll(sortedVertices.subList(0, numVertices));
+
+        return highScoreVertices;
+    }
+
     protected int getCost(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph) {
         return getNumberOfUncoveredEdges(vertexCoverCandidate, graph);
     }
@@ -154,7 +186,7 @@ public abstract class Algorithm {
     protected abstract Set<Vertex> selectExitingVertices(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph);
     protected abstract Set<Vertex> selectEnteringVertices(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph);
     protected abstract void removeVertices(Set<Vertex> inputVertices);
-
+    protected abstract int getNumberOfVerticesToSwap();
 
 
 }

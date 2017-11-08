@@ -26,28 +26,28 @@ public class LocalSearchAlgorithm2 extends Algorithm {
 
     @Override
     protected Set<Vertex> selectEnteringVertices(Set<Vertex> vertexCoverCandidate, UndirectedGraph graph) {
-        // TODO: Implement this method (and actually make this random)
-        Set<Vertex> vertices = graph.vertexSet();
+        // TODO: Implement this method (choose random uncovered edge & pick vertex with the higher dscore)
 
-        for (Vertex v : vertices) {
-            if (!vertexCoverCandidate.contains(v.getId())) {
-                HashSet<Vertex> s = new HashSet<>();
-                s.add(v);
-                return s;
+        Iterator<Vertex> iter = graph.vertexSet().iterator();
+        HashSet<Vertex> vSet = new HashSet<>();
+        while (iter.hasNext() && vSet.size() < getNumberOfVerticesToSwap()) {
+            Vertex vertex = iter.next();
+            if (!vertexCoverCandidate.contains(vertex)) {
+                vSet.add(vertex);
             }
         }
 
-        return null;
+        return vSet;
     }
 
     @Override
     protected Set<Vertex> selectExitingVertices(Set<Vertex> vertexCoverCandidate, UndirectedGraph graph) {
-        // TODO: Implement this method
+        // Choose vertex/vertices with the highest scores
+        return getVerticesWithHighestScores(vertexCoverCandidate, getNumberOfVerticesToSwap());
+    }
 
-        Iterator<Vertex> iter = vertexCoverCandidate.iterator();
-        HashSet<Vertex> v = new HashSet<>();
-        v.add(iter.next());
-
-        return v;
+    @Override
+    protected int getNumberOfVerticesToSwap() {
+        return 3;
     }
 }

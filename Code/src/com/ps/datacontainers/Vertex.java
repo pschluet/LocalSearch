@@ -35,6 +35,8 @@ public class Vertex {
     public boolean equals(Object other) {
         if (getClass() == other.getClass() && this.id == ((Vertex)other).getId())
             return true;
+        if (this == other)
+            return true;
         return false;
     }
 }
