@@ -6,10 +6,9 @@ This is a base class for the algorithm classes. Common code resides here, and th
  */
 
 import com.ps.InputArgs;
+import com.ps.datacontainers.Solution;
 import org.jgrapht.Graphs;
 import org.jgrapht.UndirectedGraph;
-import org.jgrapht.alg.interfaces.MinimumVertexCoverAlgorithm;
-import org.jgrapht.alg.vertexcover.GreedyVCImpl;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
@@ -64,7 +63,6 @@ public abstract class Algorithm {
     protected Set<Integer> getInitialVertexCover(final UndirectedGraph graph) {
         // This implements the APPROX-VERTEX-COVER algorithm from page 1109 of
         // the CLRS Algorithms textbook (3rd Edition)
-
 
         // Make a copy of the input graph
         UndirectedGraph<Integer, DefaultEdge> changingGraph = new SimpleGraph<Integer, DefaultEdge>(DefaultEdge.class);
@@ -123,7 +121,32 @@ public abstract class Algorithm {
     }
 
     protected int getQuality(final Set<Integer> vertexCoverCandidate, final UndirectedGraph graph) {
+
         return vertexCoverCandidate.size();
+
+    }
+
+    protected int getNumberOfUncoveredEdges(final Set<Integer> vertexCoverCandidate, final UndirectedGraph graph) {
+
+        int numUncoveredEdges = 0;
+
+        // Iterate over all edges
+        for (Object edge : graph.edgeSet()) {
+            // Get source (s) and target (t) of the current edge
+            int s = (int)graph.getEdgeSource(edge);
+            int t = (int)graph.getEdgeTarget(edge);
+
+            // Check to make sure the solution candidate contains the source or target vertex of this edge
+            if (!vertexCoverCandidate.contains(s) && !vertexCoverCandidate.contains(t)) {
+                numUncoveredEdges++;
+            }
+        }
+
+        return numUncoveredEdges;
+    }
+
+    protected int getCost(final Set<Integer> vertexCoverCandidate, final UndirectedGraph graph) {
+        return getNumberOfUncoveredEdges(vertexCoverCandidate, graph);
     }
 
     protected abstract Set<Integer> selectExitingVertices(final Set<Integer> vertexCoverCandidate, final UndirectedGraph graph);

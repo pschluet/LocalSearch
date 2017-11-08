@@ -1,4 +1,4 @@
-package com.ps.algorithms;
+package com.ps.datacontainers;
 
 /*
 This class contains all the data components that are necessary for writing the output files. It is populated

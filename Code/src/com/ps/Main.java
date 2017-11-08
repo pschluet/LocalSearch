@@ -7,7 +7,7 @@ This file is the main entry point to the code and contains the high-level progra
 import com.ps.algorithms.Algorithm;
 import com.ps.algorithms.LocalSearchAlgorithm1;
 import com.ps.algorithms.LocalSearchAlgorithm2;
-import com.ps.algorithms.Solution;
+import com.ps.datacontainers.Solution;
 import com.ps.enums.AlgorithmType;
 import com.ps.fileIO.Utils;
 import org.jgrapht.UndirectedGraph;

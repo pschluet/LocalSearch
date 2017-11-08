@@ -4,8 +4,8 @@ package com.ps.fileIO;
 This file contains code for file IO (reading input data, and writing output files)
  */
 
-import com.ps.algorithms.Solution;
-import com.ps.algorithms.TracePoint;
+import com.ps.datacontainers.Solution;
+import com.ps.datacontainers.TracePoint;
 import org.jgrapht.UndirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
@@ -13,7 +13,6 @@ import org.jgrapht.graph.SimpleGraph;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class Utils {
     public static UndirectedGraph readDataFile(String filePath) {

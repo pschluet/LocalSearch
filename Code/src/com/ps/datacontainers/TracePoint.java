@@ -1,4 +1,4 @@
-package com.ps.algorithms;
+package com.ps.datacontainers;
 
 /*
 This is used to capture quality vs. time results as the algorithm runs.
