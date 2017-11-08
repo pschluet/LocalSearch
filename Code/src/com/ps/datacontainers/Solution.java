@@ -11,20 +11,20 @@ import java.util.List;
 import java.util.Set;
 
 public class Solution {
-    protected Set<Integer> vertexCoverNodes;
+    protected Set<Vertex> vertexCoverNodes;
     protected List<TracePoint> tracePoints;
     protected long startTimeNs;
 
     public Solution() {
-        vertexCoverNodes = new HashSet<Integer>();
+        vertexCoverNodes = new HashSet<Vertex>();
         tracePoints = new ArrayList<TracePoint>();
     }
 
-    public Set<Integer> getVertexCoverNodes() {
+    public Set<Vertex> getVertexCoverNodes() {
         return vertexCoverNodes;
     }
 
-    public void setVertexCoverNodes(Set<Integer> vertexCoverNodes) {
+    public void setVertexCoverNodes(Set<Vertex> vertexCoverNodes) {
         this.vertexCoverNodes = vertexCoverNodes;
     }
 

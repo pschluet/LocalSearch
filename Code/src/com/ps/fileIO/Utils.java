@@ -6,6 +6,7 @@ This file contains code for file IO (reading input data, and writing output file
 
 import com.ps.datacontainers.Solution;
 import com.ps.datacontainers.TracePoint;
+import com.ps.datacontainers.Vertex;
 import org.jgrapht.UndirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
@@ -17,15 +18,15 @@ import java.util.List;
 public class Utils {
     public static UndirectedGraph readDataFile(String filePath) {
         // Create graph
-        UndirectedGraph<Integer, DefaultEdge> graph = new SimpleGraph<Integer, DefaultEdge>(DefaultEdge.class);
+        UndirectedGraph<Vertex, DefaultEdge> graph = new SimpleGraph<Vertex, DefaultEdge>(DefaultEdge.class);
 
         String line = null;
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
 
-            int sourceVertex = 1;
-            int destinationVertex;
+            Vertex sourceVertex = new Vertex(1);
+            Vertex destinationVertex;
 
             // Ignore header line
             reader.readLine();
@@ -36,7 +37,7 @@ public class Utils {
                 if (!graph.containsVertex(sourceVertex)) graph.addVertex(sourceVertex);
 
                 for (String dv : line.split(" ")) {
-                    destinationVertex = Integer.parseInt(dv);
+                    destinationVertex = new Vertex(Integer.parseInt(dv));
 
                     // Add destination vertex if it doesn't exist
                     if (!graph.containsVertex(destinationVertex)) graph.addVertex(destinationVertex);
@@ -44,7 +45,7 @@ public class Utils {
                     // Add edge
                     graph.addEdge(sourceVertex, destinationVertex);
                 }
-                sourceVertex++;
+                sourceVertex = new Vertex(sourceVertex.getId() + 1);
             }
 
             reader.close();
@@ -66,11 +67,11 @@ public class Utils {
             writer.write(String.format("%d\n",solution.getBestQualityAchieved()));
 
             // Write out vertex cover nodes
-            List<Integer> vcNodes = new ArrayList<>(solution.getVertexCoverNodes());
+            List<Vertex> vcNodes = new ArrayList<>(solution.getVertexCoverNodes());
             for (int i = 0; i < vcNodes.size() - 1; i++) {
-                writer.write(String.format("%d,", vcNodes.get(i)));
+                writer.write(String.format("%d,", vcNodes.get(i).getId()));
             }
-            writer.write(String.format("%d", vcNodes.get(vcNodes.size() - 1)));
+            writer.write(String.format("%d", vcNodes.get(vcNodes.size() - 1).getId()));
 
             writer.close();
         } catch (IOException e) {

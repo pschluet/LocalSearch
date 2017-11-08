@@ -5,6 +5,7 @@ This file contains the implementation of the second local search algorithm.
  */
 
 import com.ps.InputArgs;
+import com.ps.datacontainers.Vertex;
 import org.jgrapht.UndirectedGraph;
 
 import java.util.HashSet;
@@ -18,19 +19,21 @@ public class LocalSearchAlgorithm2 extends Algorithm {
     }
 
     @Override
-    protected void removeVertices(Set<Integer> inputVertices) {
-        int numVerticesToRemove = 2;
+    protected void removeVertices(Set<Vertex> inputVertices) {
+        int numVerticesToRemove = 1;
         removeNumberOfVertices(inputVertices, numVerticesToRemove);
     }
 
     @Override
-    protected Set<Integer> selectEnteringVertices(Set<Integer> vertexCoverCandidate, UndirectedGraph graph) {
-        // TODO: Implement this method
-        Set<Integer> vertices = graph.vertexSet();
+    protected Set<Vertex> selectEnteringVertices(Set<Vertex> vertexCoverCandidate, UndirectedGraph graph) {
+        // TODO: Implement this method (and actually make this random)
+        Set<Vertex> vertices = graph.vertexSet();
 
-        for (Integer v : vertices) {
-            if (!vertexCoverCandidate.contains(v)) {
-                return new HashSet<Integer>(v);
+        for (Vertex v : vertices) {
+            if (!vertexCoverCandidate.contains(v.getId())) {
+                HashSet<Vertex> s = new HashSet<>();
+                s.add(v);
+                return s;
             }
         }
 
@@ -38,11 +41,13 @@ public class LocalSearchAlgorithm2 extends Algorithm {
     }
 
     @Override
-    protected Set<Integer> selectExitingVertices(Set<Integer> vertexCoverCandidate, UndirectedGraph graph) {
+    protected Set<Vertex> selectExitingVertices(Set<Vertex> vertexCoverCandidate, UndirectedGraph graph) {
         // TODO: Implement this method
 
-        Iterator<Integer> iter = vertexCoverCandidate.iterator();
+        Iterator<Vertex> iter = vertexCoverCandidate.iterator();
+        HashSet<Vertex> v = new HashSet<>();
+        v.add(iter.next());
 
-        return new HashSet<Integer>(iter.next());
+        return v;
     }
 }
