@@ -27,6 +27,9 @@ public abstract class Algorithm {
         this.randomGenerator = new Random(args.getRandomSeed());
     }
 
+    protected abstract void removeVertices(Set<Vertex> inputVertices);
+    protected abstract int getNumberOfVerticesToSwap();
+
     public Solution run(final UndirectedGraph graph) {
         Solution soln = new Solution();
         soln.startTiming();
@@ -46,17 +49,17 @@ public abstract class Algorithm {
                     soln.setVertexCoverNodes(new HashSet<>(vertexCoverCandidate));
                 }
 
-                // Remove certain number of vertices and continue the search (see child classes for implementation)
+                // Remove certain number of vertices and continue the search
                 removeVertices(vertexCoverCandidate);
                 updateScores(vertexCoverCandidate, graph);
             }
 
-            // Select some vertices to remove from the candidate solution (see child classes for implementation)
+            // Select some vertices to remove from the candidate solution
             Set<Vertex> exitingVertices = selectExitingVertices(vertexCoverCandidate, graph);
             vertexCoverCandidate.removeAll(exitingVertices);
             updateScores(vertexCoverCandidate, graph);
 
-            // Select some vertices to add to the candidate solution (see child classes for implementation)
+            // Select some vertices to add to the candidate solution
             Set<Vertex> enteringVertices = selectEnteringVertices(vertexCoverCandidate, graph);
             vertexCoverCandidate.addAll(enteringVertices);
             updateScores(vertexCoverCandidate, graph);
@@ -183,10 +186,49 @@ public abstract class Algorithm {
         return getNumberOfUncoveredEdges(vertexCoverCandidate, graph);
     }
 
-    protected abstract Set<Vertex> selectExitingVertices(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph);
-    protected abstract Set<Vertex> selectEnteringVertices(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph);
-    protected abstract void removeVertices(Set<Vertex> inputVertices);
-    protected abstract int getNumberOfVerticesToSwap();
+    protected Set<Vertex> selectEnteringVertices(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph) {
 
+        // Make a copy of the input graph
+        UndirectedGraph<Vertex, DefaultEdge> graphCopy = new SimpleGraph<Vertex, DefaultEdge>(DefaultEdge.class);
+        Graphs.addGraph(graphCopy, graph);
 
+        // Remove vertices that are part of the current VC candidate solution
+        graphCopy.removeAllVertices(vertexCoverCandidate);
+
+        HashSet<Vertex> enteringVertices = new HashSet<>();
+
+        // If the number of uncovered edges is less than we want to select, reinitialize to the original graph
+        // and just select from covered edges
+        if (graphCopy.edgeSet().size() < getNumberOfVerticesToSwap()) {
+            graphCopy = new SimpleGraph<Vertex, DefaultEdge>(DefaultEdge.class);
+            Graphs.addGraph(graphCopy, graph);
+        }
+
+        Object[] edges = graphCopy.edgeSet().toArray();
+
+        // Pick random edges that are not covered by the current VC candidate solution
+        for (int i = 0; i < getNumberOfVerticesToSwap(); i++) {
+            // Get random index
+            int ndx = randomGenerator.nextInt(edges.length);
+
+            // Get vertices for this edge
+            DefaultEdge selectedEdge = (DefaultEdge)edges[ndx];
+            Vertex u = (Vertex)graph.getEdgeSource(selectedEdge);
+            Vertex v = (Vertex)graph.getEdgeTarget(selectedEdge);
+
+            // Pick the edge with the highest score
+            Vertex selectedVertex = u.getScore() > v.getScore() ? u : v;
+            enteringVertices.add(selectedVertex);
+
+            // Remove the edge so it isn't selected again if we are selecting multiple entering vertices
+            graphCopy.removeEdge(selectedEdge);
+        }
+
+        return enteringVertices;
+    }
+
+    protected Set<Vertex> selectExitingVertices(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph) {
+        // Choose vertex/vertices with the highest scores
+        return getVerticesWithHighestScores(vertexCoverCandidate, getNumberOfVerticesToSwap());
+    }
 }

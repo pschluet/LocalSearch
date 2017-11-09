@@ -6,10 +6,6 @@ This file contains the implementation of the second local search algorithm.
 
 import com.ps.InputArgs;
 import com.ps.datacontainers.Vertex;
-import org.jgrapht.UndirectedGraph;
-
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 public class LocalSearchAlgorithm2 extends Algorithm {
@@ -25,29 +21,7 @@ public class LocalSearchAlgorithm2 extends Algorithm {
     }
 
     @Override
-    protected Set<Vertex> selectEnteringVertices(Set<Vertex> vertexCoverCandidate, UndirectedGraph graph) {
-        // TODO: Implement this method (choose random uncovered edge & pick vertex with the higher dscore)
-
-        Iterator<Vertex> iter = graph.vertexSet().iterator();
-        HashSet<Vertex> vSet = new HashSet<>();
-        while (iter.hasNext() && vSet.size() < getNumberOfVerticesToSwap()) {
-            Vertex vertex = iter.next();
-            if (!vertexCoverCandidate.contains(vertex)) {
-                vSet.add(vertex);
-            }
-        }
-
-        return vSet;
-    }
-
-    @Override
-    protected Set<Vertex> selectExitingVertices(Set<Vertex> vertexCoverCandidate, UndirectedGraph graph) {
-        // Choose vertex/vertices with the highest scores
-        return getVerticesWithHighestScores(vertexCoverCandidate, getNumberOfVerticesToSwap());
-    }
-
-    @Override
     protected int getNumberOfVerticesToSwap() {
-        return 3;
+        return 1;
     }
 }
