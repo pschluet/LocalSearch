@@ -190,6 +190,30 @@ public abstract class Algorithm {
 
     protected Set<Vertex> selectEnteringVertices(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph) {
 
+        Set<Vertex> enteringVertices = new HashSet<>();
+
+        for (int i = 0; i < getNumberOfVerticesToSwap(); i++) {
+            DefaultEdge uncoveredEdge = getRandomUncoveredEdge(vertexCoverCandidate, graph);
+            Vertex vertexToAdd;
+            if (uncoveredEdge == null) {
+                vertexToAdd = getRandomVertexNotInCover(vertexCoverCandidate, graph);
+            } else {
+                // Pick the vertex with the highest score (between the vertices on either end
+                // of the uncovered edge)
+                Vertex u = (Vertex)graph.getEdgeSource(uncoveredEdge);
+                Vertex v = (Vertex)graph.getEdgeTarget(uncoveredEdge);
+                vertexToAdd = u.getScore() > v.getScore() ? u : v;
+            }
+            vertexCoverCandidate.add(vertexToAdd);
+            enteringVertices.add(vertexToAdd);
+        }
+
+        vertexCoverCandidate.removeAll(enteringVertices);
+
+        return enteringVertices;
+    }
+
+    protected DefaultEdge getRandomUncoveredEdge(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph) {
         // Make a copy of the input graph
         UndirectedGraph<Vertex, DefaultEdge> graphCopy = new SimpleGraph<Vertex, DefaultEdge>(DefaultEdge.class);
         Graphs.addGraph(graphCopy, graph);
@@ -197,36 +221,30 @@ public abstract class Algorithm {
         // Remove vertices that are part of the current VC candidate solution
         graphCopy.removeAllVertices(vertexCoverCandidate);
 
-        HashSet<Vertex> enteringVertices = new HashSet<>();
-
-        // If the number of uncovered edges is less than we want to select, reinitialize to the original graph
-        // and just select from covered edges
-        if (graphCopy.edgeSet().size() < getNumberOfVerticesToSwap()) {
-            graphCopy = new SimpleGraph<Vertex, DefaultEdge>(DefaultEdge.class);
-            Graphs.addGraph(graphCopy, graph);
-        }
+        if (graphCopy.edgeSet().size() == 0)
+            return null;
 
         Object[] edges = graphCopy.edgeSet().toArray();
 
-        // Pick random edges that are not covered by the current VC candidate solution
-        for (int i = 0; i < getNumberOfVerticesToSwap(); i++) {
-            // Get random index
-            int ndx = randomGenerator.nextInt(edges.length);
+        // Get random index
+        int ndx = randomGenerator.nextInt(edges.length);
 
-            // Get vertices for this edge
-            DefaultEdge selectedEdge = (DefaultEdge)edges[ndx];
-            Vertex u = (Vertex)graph.getEdgeSource(selectedEdge);
-            Vertex v = (Vertex)graph.getEdgeTarget(selectedEdge);
+        return (DefaultEdge)edges[ndx];
+    }
 
-            // Pick the edge with the highest score
-            Vertex selectedVertex = u.getScore() > v.getScore() ? u : v;
-            enteringVertices.add(selectedVertex);
+    protected Vertex getRandomVertexNotInCover(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph) {
+        // Make a copy of the input graph
+        UndirectedGraph<Vertex, DefaultEdge> graphCopy = new SimpleGraph<Vertex, DefaultEdge>(DefaultEdge.class);
+        Graphs.addGraph(graphCopy, graph);
 
-            // Remove the edge so it isn't selected again if we are selecting multiple entering vertices
-            graphCopy.removeEdge(selectedEdge);
-        }
+        graphCopy.removeAllVertices(vertexCoverCandidate);
 
-        return enteringVertices;
+        Object[] unusedVertices = graphCopy.vertexSet().toArray();
+
+        // Get random index
+        int ndx = randomGenerator.nextInt(unusedVertices.length);
+
+        return (Vertex)unusedVertices[ndx];
     }
 
     protected Set<Vertex> selectExitingVertices(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph) {
