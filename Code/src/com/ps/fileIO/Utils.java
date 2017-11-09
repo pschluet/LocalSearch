@@ -36,14 +36,16 @@ public class Utils {
                 // Add source vertex if it doesn't exist
                 if (!graph.containsVertex(sourceVertex)) graph.addVertex(sourceVertex);
 
-                for (String dv : line.split(" ")) {
-                    destinationVertex = new Vertex(Integer.parseInt(dv));
+                if (!line.isEmpty()) {
+                    for (String dv : line.split(" ")) {
+                        destinationVertex = new Vertex(Integer.parseInt(dv));
 
-                    // Add destination vertex if it doesn't exist
-                    if (!graph.containsVertex(destinationVertex)) graph.addVertex(destinationVertex);
+                        // Add destination vertex if it doesn't exist
+                        if (!graph.containsVertex(destinationVertex)) graph.addVertex(destinationVertex);
 
-                    // Add edge
-                    graph.addEdge(sourceVertex, destinationVertex);
+                        // Add edge
+                        graph.addEdge(sourceVertex, destinationVertex);
+                    }
                 }
                 sourceVertex = new Vertex(sourceVertex.getId() + 1);
             }
