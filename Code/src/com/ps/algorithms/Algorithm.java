@@ -80,7 +80,9 @@ public abstract class Algorithm {
 
         while (changingGraph.edgeSet().size() > 0) {
             // Pick random edge in remaining edge set
-            DefaultEdge nextEdge = changingGraph.edgeSet().iterator().next();
+            Object[] edges = changingGraph.edgeSet().toArray();
+            int ndx = randomGenerator.nextInt(edges.length);
+            DefaultEdge nextEdge = (DefaultEdge)edges[ndx];
 
             // Get source (u) and target (v) of the current edge
             Vertex u = changingGraph.getEdgeSource(nextEdge);
