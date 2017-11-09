@@ -36,6 +36,9 @@ public abstract class Algorithm {
 
         // Get initial vertex cover
         Set<Vertex> vertexCoverCandidate = getInitialVertexCover(graph);
+        soln.addTracePoint(getQuality(vertexCoverCandidate, graph));
+        soln.setVertexCoverNodes(new HashSet<>(vertexCoverCandidate));
+
         updateScores(vertexCoverCandidate, graph);
 
         while (soln.getElapsedTimeSec() < cutoffTimeSec) {
