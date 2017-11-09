@@ -11,3 +11,12 @@ Note that if your algorithm has random components then you should present result
  
 Thanks,
 Caleb
+
+Questions:
+- Where in Algorithm 1 would save the quality to the trace?
+	- In lines 4-7? Then Cost as defined would always be the same. -> Yes, but quality is size of vertex cover.
+	- After 11? Then it won't always be an actual solution/vertex cover.
+	- Quality in instances table seems to be number of vertices in vertex cover.
+- What is length in the Comprehensive Table (S9: Evaluation)? -> Avg. Vertex Cover Size
+- S9: ... instances XX and YY ... ?? -> Will clear it up. Probably the largest two.
+- My approach OK? Similar algorithm but varying neighborhood size.
