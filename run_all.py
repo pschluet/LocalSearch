@@ -16,7 +16,7 @@ if __name__ == "__main__":
                 args = "-inst {} -alg {} -time {} -seed {}".format(file, algorithm, time_limit_sec, seed)
                 cmd = "java -cp {} com.ps.Main {}".format(classPath, args)
 
-                txt = "Running {}\n".format(args)
+                txt = "Running {}".format(args)
                 with open(file_name, "w") as file:
                     file.write(txt + "\n")
                 print(txt)
