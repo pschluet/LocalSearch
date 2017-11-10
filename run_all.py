@@ -17,18 +17,18 @@ if __name__ == "__main__":
                 cmd = "java -cp {} com.ps.Main {}".format(classPath, args)
 
                 txt = "Running {}\n".format(args)
-                with (file_name, "w") as file:
+                with open(file_name, "w") as file:
                     file.write(txt + "\n")
                 print(txt)
-                
+
                 returnCode = call(cmd, shell=True, cwd="./Code/")
 
                 if returnCode != 0:
                     txt = "*"*80 +"\nError on " + args + "\n" + "*"*80
-                    with (file_name, "w") as file:
+                    with open(file_name, "w") as file:
                         file.write(txt + "\n")
                     print(txt)
     txt = "Done!"
-    with (file_name, "w") as file:
+    with open(file_name, "w") as file:
         file.write(txt + "\n")
     print(txt)
