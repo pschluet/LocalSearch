@@ -20,3 +20,4 @@ if __name__ == "__main__":
 
                 if returnCode != 0:
                     print("*"*80 +"\nError on " + args + "\n" + "*"*80)
+    print("Done!")
