@@ -17,7 +17,7 @@ import java.util.*;
 
 public abstract class Algorithm {
 
-    protected UndirectedGraph graph;
+    protected UndirectedGraph<Vertex,DefaultEdge> graph;
     protected int cutoffTimeSec;
     protected Random randomGenerator;
 
@@ -30,7 +30,7 @@ public abstract class Algorithm {
     protected abstract void removeVertices(Set<Vertex> inputVertices);
     protected abstract int getNumberOfVerticesToSwap();
 
-    public Solution run(final UndirectedGraph graph) {
+    public Solution run(final UndirectedGraph<Vertex,DefaultEdge> graph) {
         Solution soln = new Solution();
         soln.startTiming();
 
@@ -71,7 +71,7 @@ public abstract class Algorithm {
         return soln;
     }
 
-    protected Set<Vertex> getInitialVertexCover(final UndirectedGraph graph) {
+    protected Set<Vertex> getInitialVertexCover(final UndirectedGraph<Vertex,DefaultEdge> graph) {
         // This implements the APPROX-VERTEX-COVER algorithm from page 1109 of
         // the CLRS Algorithms textbook (3rd Edition)
 
@@ -105,10 +105,10 @@ public abstract class Algorithm {
         return vertexCover;
     }
 
-    protected boolean isVertexCover(final Set<Vertex> solutionToCheck, final UndirectedGraph graph) {
+    protected boolean isVertexCover(final Set<Vertex> solutionToCheck, final UndirectedGraph<Vertex,DefaultEdge> graph) {
 
         // Iterate over all edges
-        for (Object edge : graph.edgeSet()) {
+        for (DefaultEdge edge : graph.edgeSet()) {
             // Get source (s) and target (t) of the current edge
             Vertex s = (Vertex)graph.getEdgeSource(edge);
             Vertex t = (Vertex)graph.getEdgeTarget(edge);
@@ -127,18 +127,18 @@ public abstract class Algorithm {
         inputVertices.removeAll(getVerticesWithHighestScores(inputVertices, numberOfVerticesToRemove));
     }
 
-    protected int getQuality(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph) {
+    protected int getQuality(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
 
         return vertexCoverCandidate.size();
 
     }
 
-    protected int getNumberOfUncoveredEdges(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph) {
+    protected int getNumberOfUncoveredEdges(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
 
         int numUncoveredEdges = 0;
 
         // Iterate over all edges
-        for (Object edge : graph.edgeSet()) {
+        for (DefaultEdge edge : graph.edgeSet()) {
             // Get source (s) and target (t) of the current edge
             Vertex s = (Vertex)graph.getEdgeSource(edge);
             Vertex t = (Vertex)graph.getEdgeTarget(edge);
@@ -152,7 +152,7 @@ public abstract class Algorithm {
         return numUncoveredEdges;
     }
 
-    protected void updateScores(final Set<Vertex> vertexCoverCandidate, UndirectedGraph graph) {
+    protected void updateScores(final Set<Vertex> vertexCoverCandidate, UndirectedGraph<Vertex,DefaultEdge> graph) {
         int currentCost = getCost(vertexCoverCandidate, graph);
 
         for (Vertex v : (Set<Vertex>)graph.vertexSet()) {
@@ -187,11 +187,11 @@ public abstract class Algorithm {
         return highScoreVertices;
     }
 
-    protected int getCost(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph) {
+    protected int getCost(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
         return getNumberOfUncoveredEdges(vertexCoverCandidate, graph);
     }
 
-    protected Set<Vertex> selectEnteringVertices(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph) {
+    protected Set<Vertex> selectEnteringVertices(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
 
         Set<Vertex> enteringVertices = new HashSet<>();
 
@@ -216,7 +216,7 @@ public abstract class Algorithm {
         return enteringVertices;
     }
 
-    protected DefaultEdge getRandomUncoveredEdge(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph) {
+    protected DefaultEdge getRandomUncoveredEdge(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
         // Make a copy of the input graph
         UndirectedGraph<Vertex, DefaultEdge> graphCopy = new SimpleGraph<Vertex, DefaultEdge>(DefaultEdge.class);
         Graphs.addGraph(graphCopy, graph);
@@ -235,7 +235,7 @@ public abstract class Algorithm {
         return (DefaultEdge)edges[ndx];
     }
 
-    protected Vertex getRandomVertexNotInCover(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph) {
+    protected Vertex getRandomVertexNotInCover(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
         // Make a copy of the input graph
         UndirectedGraph<Vertex, DefaultEdge> graphCopy = new SimpleGraph<Vertex, DefaultEdge>(DefaultEdge.class);
         Graphs.addGraph(graphCopy, graph);

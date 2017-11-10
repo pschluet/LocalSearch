@@ -8,9 +8,11 @@ import com.ps.algorithms.Algorithm;
 import com.ps.algorithms.LocalSearchAlgorithm1;
 import com.ps.algorithms.LocalSearchAlgorithm2;
 import com.ps.datacontainers.Solution;
+import com.ps.datacontainers.Vertex;
 import com.ps.enums.AlgorithmType;
 import com.ps.fileIO.Utils;
 import org.jgrapht.UndirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
 
 import java.io.FileNotFoundException;
 
@@ -22,7 +24,7 @@ public class Main {
         InputArgs inputArgs = new InputArgs(args);
 
         // Read input data
-        UndirectedGraph graph = Utils.readDataFile("../Data/" + inputArgs.fileName);
+        UndirectedGraph<Vertex,DefaultEdge> graph = Utils.readDataFile("../Data/" + inputArgs.fileName);
 
         // Run one of the algorithms depending on the command line arguments supplied
         Algorithm algorithm;

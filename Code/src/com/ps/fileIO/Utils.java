@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
-    public static UndirectedGraph readDataFile(String filePath) {
+    public static UndirectedGraph<Vertex,DefaultEdge> readDataFile(String filePath) {
         // Create graph
         UndirectedGraph<Vertex, DefaultEdge> graph = new SimpleGraph<Vertex, DefaultEdge>(DefaultEdge.class);
 
