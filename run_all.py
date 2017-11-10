@@ -8,6 +8,7 @@ if __name__ == "__main__":
     num_random_seeds = 10
     time_limit_sec = 600
     classPath = "Main.jar:lib/commons-cli-1.4.jar:lib/jgrapht-core-1.0.1.jar"
+    file_name = "out.txt"
 
     for file in data_files:
         for algorithm in algorithms:
@@ -15,9 +16,19 @@ if __name__ == "__main__":
                 args = "-inst {} -alg {} -time {} -seed {}".format(file, algorithm, time_limit_sec, seed)
                 cmd = "java -cp {} com.ps.Main {}".format(classPath, args)
 
-                print("Running {}".format(args))
+                txt = "Running {}\n".format(args)
+                with (file_name, "w") as file:
+                    file.write(txt + "\n")
+                print(txt)
+                
                 returnCode = call(cmd, shell=True, cwd="./Code/")
 
                 if returnCode != 0:
-                    print("*"*80 +"\nError on " + args + "\n" + "*"*80)
-    print("Done!")
+                    txt = "*"*80 +"\nError on " + args + "\n" + "*"*80
+                    with (file_name, "w") as file:
+                        file.write(txt + "\n")
+                    print(txt)
+    txt = "Done!"
+    with (file_name, "w") as file:
+        file.write(txt + "\n")
+    print(txt)
