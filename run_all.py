@@ -24,8 +24,7 @@ if __name__ == "__main__":
                     file.write(txt + "\n")
                 print(txt)
 
-                returnCode = 0 #call(cmd, shell=True, cwd="./Code/")
-                print(cmd)
+                returnCode = call(cmd, shell=True, cwd="./Code/")
 
                 if returnCode != 0:
                     txt = "*"*80 +"\nError on " + args + "\n" + "*"*80
