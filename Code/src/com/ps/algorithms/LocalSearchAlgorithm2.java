@@ -22,6 +22,6 @@ public class LocalSearchAlgorithm2 extends Algorithm {
 
     @Override
     protected int getNumberOfVerticesToSwap() {
-        return 1;
+        return 5;
     }
 }
