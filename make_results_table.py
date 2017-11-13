@@ -8,7 +8,7 @@ class LatexTableBuilder:
     \centering
     \caption{Algorithm Performance}
     \label{algperf}
-    \begin{tabular}{|l|l|l|l|l|l|l|}
+    \begin{tabular}{|l|r|r|r|r|r|r|}
     \hline
         & \multicolumn{3}{c|}{Local Search 1} & \multicolumn{3}{c|}{Local Search 2} \\ \hline
     Dataset & Time(s)    & VC Size   & Rel Error  & Time (s)   & VC Size   & Rel Error  \\ \hline
