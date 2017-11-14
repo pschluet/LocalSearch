@@ -8,9 +8,9 @@ class LatexTableBuilder:
     \centering
     \caption{Algorithm Performance}
     \label{algperf}
-    \begin{tabular}{|l|r|r|r|r|r|r|}
+    \begin{tabular}{lrrrrrr}
     \hline
-        & \multicolumn{3}{c|}{Local Search 1} & \multicolumn{3}{c|}{Local Search 2} \\ \hline
+        & \multicolumn{3}{l}{Local Search 1} & \multicolumn{3}{l}{Local Search 2} \\ \hline
     Dataset & Time(s)    & VC Size   & Rel Error  & Time (s)   & VC Size   & Rel Error  \\ \hline
     """)
 
@@ -24,13 +24,13 @@ class LatexTableBuilder:
         pass
 
     def add_row(self, data):
-        format_str = r"{}    & {:.2f}   & {:.0f}      & {:.2f}   & {:.2f}   & {:.0f}      & {:.2f}   \\ \hline"
+        format_str = r"{}    & {:.2f}   & {:.0f}      & {:.2f}   & {:.2f}   & {:.0f}      & {:.2f}   \\"
         if not data.alg1_rel_err:
-            format_str = r"{}    & {}   & {}      & {}   & {:.2f}   & {:.0f}      & {:.2f}   \\ \hline"
+            format_str = r"{}    & {}   & {}      & {}   & {:.2f}   & {:.0f}      & {:.2f}   \\"
         if not data.alg2_rel_err:
-            format_str = r"{}    & {:.2f}   & {:.0f}      & {:.2f}   & {}   & {}      & {}   \\ \hline"
+            format_str = r"{}    & {:.2f}   & {:.0f}      & {:.2f}   & {}   & {}      & {}   \\"
         if not data.alg1_rel_err and not data.alg2_rel_err:
-            format_str = r"{}    & {}   & {}      & {}   & {}   & {}      & {}   \\ \hline"
+            format_str = r"{}    & {}   & {}      & {}   & {}   & {}      & {}   \\"
 
         self.rows.append(format_str
                          .format(data.instance_name.replace("_"," "),
