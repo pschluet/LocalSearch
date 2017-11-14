@@ -89,6 +89,7 @@ class DataLoader:
         data = []
         for file_name in file_names:
             new_data = np.loadtxt(file_name, delimiter=",")
+            new_data = new_data.reshape((-1,2))
             data.append(new_data[-1,:])
         data = np.array(data)
 
