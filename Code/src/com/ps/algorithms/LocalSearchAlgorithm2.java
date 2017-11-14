@@ -16,12 +16,12 @@ public class LocalSearchAlgorithm2 extends Algorithm {
 
     @Override
     protected void removeVertices(Set<Vertex> inputVertices) {
-        int numVerticesToRemove = 1;
+        int numVerticesToRemove = (int)(inputVertices.size() * 0.01);
         removeNumberOfVertices(inputVertices, numVerticesToRemove);
     }
 
     @Override
     protected int getNumberOfVerticesToSwap() {
-        return 5;
+        return 1;
     }
 }
