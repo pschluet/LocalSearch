@@ -1,4 +1,41 @@
 \section{Introduction}
+\section{Problem Definition}
+\section{Related Work}
+\section{Algorithms}
+The following sections provide a detailed description of the local search algorithms that were implemented. Both algorithms follow the same general structure but vary in TODO way.
+
+\subsection{Local Search 1}
+The basic framework of this algorithm is based upon the decisional version of the vertex cover problem. It is an iterated k-vertex cover algorithm. We first determine an initial vertex cover of some integer size $k$. One vertex is then removed from this vertex cover, and two vertices are exchanged in and out until a new vertex cover is found of size $k - 1$.
+
+The particular elements of note in this algorithm are:
+\begin{enumerate}
+	\item The method by which a vertex is removed from the candidate solution once a vertex cover is found
+	\item The method by which the exiting vertex is selected in the exchange to find a new vertex cover
+	\item The method by which the entering vertex is selected in the exchange to find a new vertex cover
+\end{enumerate}
+
+In order to discuss these items, it is necessary to first discuss the $cost$ and $dscore$ functions used in this algorithm. Given a graph, $G=(V,E)$, with vertex set $V$ and edge set $E$ and a candidate solution $C$, the $cost$ of the candidate solution is
+\begin{equation*}
+	cost(G,C) = \text{the number of edges not covered by $C$}
+\end{equation*}
+where a lower cost is preferred. 
+
+The $dscore$ (TODO REFERENCE HERE to 5 TwoNewLS) of a given vertex essentially measures the benefit of changing the state of a vertex (removing or adding it to the candidate solution). For a given vertex $v \in V$, it is defined as 
+\begin{equation}
+	dscore(v) = cost(G,C) - cost(G,C')
+\end{equation}
+where $C' = C \setminus \{v\}$ if $v \in C$, and $C' = C \cup \{v\}$ otherwise.
+
+
+
+\section{Empirical Evaluation}
+\section{Discussion}
+\section{Conclusion}
+
+
+
+
+\section{Introduction}
 
 The \textit{proceedings} are the records of a conference.\footnote{This
   is a footnote}  ACM seeks
