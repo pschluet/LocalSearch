@@ -31,6 +31,8 @@ public abstract class Algorithm {
     protected abstract int getNumberOfVerticesToSwap();
 
     public Solution run(final UndirectedGraph<Vertex,DefaultEdge> graph) {
+        this.graph = graph;
+
         Solution soln = new Solution();
         soln.startTiming();
 
