@@ -81,7 +81,7 @@ class DataLoader:
         self.alg2_rel_err = alg2_data[2]
 
     def __load_data(self, algorithm):
-        file_names = glob("output/*" + self.instance_name + "*" + algorithm + "*.trace")
+        file_names = glob("output/*" + self.instance_name + ".graph*" + algorithm + "*.trace")
 
         if not file_names:
             return
