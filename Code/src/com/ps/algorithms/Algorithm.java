@@ -190,7 +190,8 @@ public abstract class Algorithm {
             if (uncoveredEdge == null) {
                 vertexToAdd = getRandomVertexNotInCover(vertexCoverCandidate, graph);
             } else {
-                vertexToAdd = (Vertex)graph.getEdgeSource(uncoveredEdge);
+                // Select a random vertex from this edge
+                vertexToAdd = randomGenerator.nextBoolean() ? graph.getEdgeSource(uncoveredEdge) : graph.getEdgeTarget(uncoveredEdge);
             }
             vertexCoverCandidate.add(vertexToAdd);
             enteringVertices.add(vertexToAdd);
