@@ -62,7 +62,6 @@ public abstract class Algorithm {
             // Select some vertices to remove from the candidate solution
             Set<Vertex> exitingVertices = selectExitingVertices(vertexCoverCandidate, graph);
             vertexCoverCandidate.removeAll(exitingVertices);
-            updateScores(vertexCoverCandidate, graph);
 
             // Select some vertices to add to the candidate solution
             Set<Vertex> enteringVertices = selectEnteringVertices(vertexCoverCandidate, graph);
@@ -126,7 +125,7 @@ public abstract class Algorithm {
 
     protected void removeNumberOfVertices(Set<Vertex> inputVertices, int numberOfVerticesToRemove) {
         // Remove the specified number of vertices from the set
-        inputVertices.removeAll(getVerticesWithHighestScores(inputVertices, numberOfVerticesToRemove));
+        inputVertices.removeAll(getVerticesWithLowestScores(inputVertices, numberOfVerticesToRemove));
     }
 
     protected int getQuality(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
@@ -135,62 +134,48 @@ public abstract class Algorithm {
 
     }
 
-    protected int getNumberOfUncoveredEdges(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
+    protected int getCostDelta(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex, DefaultEdge> graph, Vertex vertexToRemove) {
+        int costDelta = 0;
 
-        int numUncoveredEdges = 0;
-
-        // Iterate over all edges
-        for (DefaultEdge edge : graph.edgeSet()) {
+        // Get vertices connected to the vertex I want to remove
+        Set<DefaultEdge> edges = graph.edgesOf(vertexToRemove);
+        for (DefaultEdge edge : edges) {
             // Get source (s) and target (t) of the current edge
             Vertex s = (Vertex)graph.getEdgeSource(edge);
             Vertex t = (Vertex)graph.getEdgeTarget(edge);
 
-            // Check to make sure the solution candidate contains the source or target vertex of this edge
-            if (!vertexCoverCandidate.contains(s) && !vertexCoverCandidate.contains(t)) {
-                numUncoveredEdges++;
+            Vertex otherEdge = s == vertexToRemove ? t : s;
+
+            // If the other vertex is not in the vertex cover, removing this vertex would uncover an edge, so the cost
+            // (number of uncovered edges) would go up by one
+            if (!vertexCoverCandidate.contains(otherEdge)) {
+                costDelta += 1;
             }
         }
 
-        return numUncoveredEdges;
+        return costDelta;
     }
 
-    protected void updateScores(final Set<Vertex> vertexCoverCandidate, UndirectedGraph<Vertex,DefaultEdge> graph) {
-        int currentCost = getCost(vertexCoverCandidate, graph);
+    protected void updateScores(Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
 
-        for (Vertex v : (Set<Vertex>)graph.vertexSet()) {
-            int newStateCost;
-            if (vertexCoverCandidate.contains(v)) {
-                vertexCoverCandidate.remove(v);
-                newStateCost = getCost(vertexCoverCandidate, graph);
-                vertexCoverCandidate.add(v);
-            } else {
-                vertexCoverCandidate.add(v);
-                newStateCost = getCost(vertexCoverCandidate, graph);
-                vertexCoverCandidate.remove(v);
-            }
-            v.setScore(currentCost - newStateCost);
+        for (Vertex v : vertexCoverCandidate) {
+
+            int costDelta = getCostDelta(vertexCoverCandidate, graph, v);
+
+            v.setScore(costDelta);
         }
     }
 
-    protected Set<Vertex> getVerticesWithHighestScores(final Set<Vertex> vertexCoverCandidate, int numVertices) {
+    protected Set<Vertex> getVerticesWithLowestScores(final Set<Vertex> vertexCoverCandidate, int numVertices) {
         // Sort by score
         List<Vertex> sortedVertices = new ArrayList<>(vertexCoverCandidate);
-        Collections.sort(sortedVertices, new Comparator<Vertex>() {
-            @Override
-            public int compare(Vertex o1, Vertex o2) {
-                return o2.getScore() - o1.getScore();
-            }
-        });
+        sortedVertices.sort(Comparator.comparingInt(Vertex::getScore));
 
         // Get the vertices with the highest scores
         Set<Vertex> highScoreVertices = new HashSet<>();
         highScoreVertices.addAll(sortedVertices.subList(0, numVertices));
 
         return highScoreVertices;
-    }
-
-    protected int getCost(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
-        return getNumberOfUncoveredEdges(vertexCoverCandidate, graph);
     }
 
     protected Set<Vertex> selectEnteringVertices(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
@@ -203,11 +188,7 @@ public abstract class Algorithm {
             if (uncoveredEdge == null) {
                 vertexToAdd = getRandomVertexNotInCover(vertexCoverCandidate, graph);
             } else {
-                // Pick the vertex with the highest score (between the vertices on either end
-                // of the uncovered edge)
-                Vertex u = (Vertex)graph.getEdgeSource(uncoveredEdge);
-                Vertex v = (Vertex)graph.getEdgeTarget(uncoveredEdge);
-                vertexToAdd = u.getScore() > v.getScore() ? u : v;
+                vertexToAdd = (Vertex)graph.getEdgeSource(uncoveredEdge);
             }
             vertexCoverCandidate.add(vertexToAdd);
             enteringVertices.add(vertexToAdd);
@@ -254,6 +235,6 @@ public abstract class Algorithm {
 
     protected Set<Vertex> selectExitingVertices(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph) {
         // Choose vertex/vertices with the highest scores
-        return getVerticesWithHighestScores(vertexCoverCandidate, getNumberOfVerticesToSwap());
+        return getVerticesWithLowestScores(vertexCoverCandidate, getNumberOfVerticesToSwap());
     }
 }

@@ -14,11 +14,11 @@ public class Vertex {
         this.score = score;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public int getScore() {
+    public Integer getScore() {
         return score;
     }
 

@@ -29,7 +29,9 @@ public class Solution {
     }
 
     public void addTracePoint(int quality) {
-        tracePoints.add(new TracePoint(getElapsedTimeSec(), quality));
+        TracePoint tp = new TracePoint(getElapsedTimeSec(), quality);
+        //System.out.println(tp);
+        tracePoints.add(tp);
     }
 
     public List<TracePoint> getTracePoints() {
