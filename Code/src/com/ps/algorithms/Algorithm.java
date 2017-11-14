@@ -20,6 +20,8 @@ public abstract class Algorithm {
     protected UndirectedGraph<Vertex,DefaultEdge> graph;
     protected int cutoffTimeSec;
     protected Random randomGenerator;
+    // If the algorithm has not found a new vertex cover in this many seconds, it returns
+    protected static final int STAGNANT_TIME_CUTOFF_SEC = 10;
 
     public Algorithm(InputArgs args) {
         this.cutoffTimeSec = args.getCutoffTimeSec();
@@ -43,7 +45,7 @@ public abstract class Algorithm {
 
         updateScores(vertexCoverCandidate, graph);
 
-        while (soln.getElapsedTimeSec() < cutoffTimeSec) {
+        while (soln.getElapsedTimeSec() < cutoffTimeSec && soln.getTimeSinceLastTracePointAddedSec() < STAGNANT_TIME_CUTOFF_SEC) {
             if (isVertexCover(vertexCoverCandidate, graph)) {
 
                 // Add point to the solution trace if the quality is better

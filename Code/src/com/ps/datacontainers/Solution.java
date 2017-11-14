@@ -13,7 +13,8 @@ import java.util.Set;
 public class Solution {
     protected Set<Vertex> vertexCoverNodes;
     protected List<TracePoint> tracePoints;
-    protected long startTimeNs;
+    protected long startTimeNs = 0;
+    protected long lastTracePointAddTimeNs = 0;
 
     public Solution() {
         vertexCoverNodes = new HashSet<Vertex>();
@@ -32,6 +33,15 @@ public class Solution {
         TracePoint tp = new TracePoint(getElapsedTimeSec(), quality);
         //System.out.println(tp);
         tracePoints.add(tp);
+
+        lastTracePointAddTimeNs = System.nanoTime();
+    }
+
+    public double getTimeSinceLastTracePointAddedSec() {
+        if (lastTracePointAddTimeNs == 0)
+            return 0;
+        else
+            return getElapsedTimeSec(lastTracePointAddTimeNs);
     }
 
     public List<TracePoint> getTracePoints() {
@@ -55,7 +65,11 @@ public class Solution {
     }
 
     public double getElapsedTimeSec() {
+        return getElapsedTimeSec(startTimeNs);
+    }
+
+    private static double getElapsedTimeSec(long startTimeNanoSec) {
         long currentTimeNs = System.nanoTime();
-        return (double)(currentTimeNs - startTimeNs) * 1E-9;
+        return (double)(currentTimeNs - startTimeNanoSec) * 1E-9;
     }
 }
