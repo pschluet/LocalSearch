@@ -16,7 +16,8 @@ public class LocalSearchAlgorithm2 extends Algorithm {
 
     @Override
     protected void removeVertices(Set<Vertex> inputVertices) {
-        int numVerticesToRemove = (int)(inputVertices.size() * 0.01);
+        int numVerticesToRemove = Math.max((int)(inputVertices.size() * 0.01), 1);
+        //System.out.println(String.format("%d, %d", inputVertices.size(), numVerticesToRemove));
         removeNumberOfVertices(inputVertices, numVerticesToRemove);
     }
 
