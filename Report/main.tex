@@ -4,6 +4,9 @@
 \renewcommand\footnotetextcopyrightpermission[1]{}
 \pagestyle{plain}
 
+\usepackage[ruled, linesnumbered]{algorithm2e} % For algorithms
+\usepackage{booktabs} % For formal tables
+
 \begin{document}
 
 \title{Local Search Algorithms for Minimum Vertex Cover}
@@ -31,16 +34,52 @@ See \cite{cai2013numvc} for details.
 
 \section{Algorithms}
 
+\begin{algorithm}[h]
+	\SetAlgoNoLine
+	\KwIn{Graph with vertex set $V$ and edge set $E$}
+	\KwOut{Set of vertices, $C*$, that form a vertex cover}
+	$C$ = initial vertex cover from APPROX-VERTEX-COVER\\
+	\While{elapsed time < cutoff time limit}{
+		\If{$C$ is a vertex cover}{
+			$C*$ = $C$\\
+			Remove the vertex in $C$ with the lowest $score$\\
+		}
+		$u$ = the vertex in $C$ with the lowest $score$\\
+		$C$ = $C \setminus$ {$u$}\\
+		$v$ = a random uncovered edge in $V \setminus C$\\
+		$C$ = $C \cup$ {$v$}
+	}
+	\Return $C*$
+	\caption{LOCAL-SEARCH-VC-1}
+	\label{alg:ls1}
+\end{algorithm}
+
+\begin{algorithm}[h]
+	\SetAlgoNoLine
+	\KwIn{Graph with vertex set $V$ and edge set $E$}
+	\KwOut{Set of vertices, $C$, that form a vertex cover}
+	$C$ = $\emptyset$\\
+	$E'$ = $E$\\
+	\While{$E' \neq \emptyset$}{
+		let ($u$,$v$) be an arbitrary edge of $E'$\\
+		$C$ = $C \cup$ {$u$,$v$}\\
+		remove from $E'$ every edge incident on either $u$ or $v$
+	}
+	\Return $C$
+	
+	\caption{APPROX-VERTEX-COVER}
+	\label{alg:avc}
+\end{algorithm}
+
 \section{Empirical Evaluation}
 
 \begin{table}[h]
-	\centering
 	\caption{Algorithm Performance}
 	\label{algperf}
 	\begin{tabular}{lrrrrrr}
-		\hline
-		& \multicolumn{3}{l}{Local Search 1} & \multicolumn{3}{l}{Local Search 2} \\ \hline
-		Dataset & Time(s)    & VC Size   & Rel Error  & Time (s)   & VC Size   & Rel Error  \\ \hline
+		\toprule
+		& \multicolumn{3}{l}{Local Search 1} & \multicolumn{3}{l}{Local Search 2} \\ \midrule
+		Dataset & Time(s)    & VC Size   & Rel Error  & Time (s)   & VC Size   & Rel Error  \\ \midrule
 		as-22july06    & 29.49   & 3364      & 0.02   & 4.38   & 3373      & 0.02   \\
 		delaunay n10    & 0.34   & 759      & 0.08   & 0.20   & 761      & 0.08   \\
 		email    & 0.51   & 635      & 0.07   & 0.25   & 632      & 0.06   \\
@@ -52,6 +91,7 @@ See \cite{cai2013numvc} for details.
 		power    & 3.05   & 2370      & 0.08   & 0.79   & 2344      & 0.06   \\
 		star    & 38.17   & 7033      & 0.02   & 9.18   & 7188      & 0.04   \\
 		star2    & 31.30   & 4867      & 0.07   & 4.12   & 4867      & 0.07   \\
+		\bottomrule
 	\end{tabular}
 \end{table}
 
