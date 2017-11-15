@@ -165,7 +165,7 @@ public abstract class Algorithm {
         List<Vertex> sortedVertices = new ArrayList<>(vertexCoverCandidate);
         sortedVertices.sort(Comparator.comparingInt(Vertex::getScore));
 
-        // Get the vertices with the highest scores
+        // Get the vertices with the lowest scores
         Set<Vertex> highScoreVertices = new HashSet<>();
         highScoreVertices.addAll(sortedVertices.subList(0, numVertices));
 
