@@ -8,10 +8,8 @@ This is a base class for the algorithm classes. Common code resides here, and th
 import com.ps.InputArgs;
 import com.ps.datacontainers.Solution;
 import com.ps.datacontainers.Vertex;
-import org.jgrapht.Graphs;
 import org.jgrapht.UndirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.SimpleGraph;
 
 import java.util.*;
 
@@ -78,31 +76,27 @@ public abstract class Algorithm {
         // This implements the APPROX-VERTEX-COVER algorithm from page 1109 of
         // the CLRS Algorithms textbook (3rd Edition)
 
-        // Make a copy of the input graph
-        UndirectedGraph<Vertex, DefaultEdge> changingGraph = new SimpleGraph<Vertex, DefaultEdge>(DefaultEdge.class);
-        Graphs.addGraph(changingGraph, graph);
+        Set<DefaultEdge> edgesRemaining = new HashSet<>(graph.edgeSet());
 
         Set<Vertex> vertexCover = new HashSet<>();
 
-        while (changingGraph.edgeSet().size() > 0) {
+        while (edgesRemaining.size() > 0) {
             // Pick random edge in remaining edge set
-            Object[] edges = changingGraph.edgeSet().toArray();
+            Object[] edges = edgesRemaining.toArray();
             int ndx = randomGenerator.nextInt(edges.length);
             DefaultEdge nextEdge = (DefaultEdge)edges[ndx];
 
             // Get source (u) and target (v) of the current edge
-            Vertex u = changingGraph.getEdgeSource(nextEdge);
-            Vertex v = changingGraph.getEdgeTarget(nextEdge);
+            Vertex u = graph.getEdgeSource(nextEdge);
+            Vertex v = graph.getEdgeTarget(nextEdge);
 
             // Add both vertices to the vertex cover
             vertexCover.add(u);
             vertexCover.add(v);
 
             // Remove every edge connected to u and v
-            Set<DefaultEdge> edgesConnectedToU = new HashSet<>(changingGraph.edgesOf(u));
-            Set<DefaultEdge> edgesConnectedToV = new HashSet<>(changingGraph.edgesOf(v));
-            changingGraph.removeAllEdges(edgesConnectedToU);
-            changingGraph.removeAllEdges(edgesConnectedToV);
+            edgesRemaining.removeAll(graph.edgesOf(u));
+            edgesRemaining.removeAll(graph.edgesOf(v));
         }
 
         return vertexCover;
@@ -203,17 +197,13 @@ public abstract class Algorithm {
     }
 
     protected DefaultEdge getRandomUncoveredEdge(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
-        // Make a copy of the input graph
-        UndirectedGraph<Vertex, DefaultEdge> graphCopy = new SimpleGraph<Vertex, DefaultEdge>(DefaultEdge.class);
-        Graphs.addGraph(graphCopy, graph);
 
-        // Remove vertices that are part of the current VC candidate solution
-        graphCopy.removeAllVertices(vertexCoverCandidate);
+        Set<DefaultEdge> uncoveredEdges = getUncoveredEdges(vertexCoverCandidate, graph);
 
-        if (graphCopy.edgeSet().size() == 0)
+        if (uncoveredEdges.size() == 0)
             return null;
 
-        Object[] edges = graphCopy.edgeSet().toArray();
+        Object[] edges = uncoveredEdges.toArray();
 
         // Get random index
         int ndx = randomGenerator.nextInt(edges.length);
@@ -221,19 +211,48 @@ public abstract class Algorithm {
         return (DefaultEdge)edges[ndx];
     }
 
+    protected Set<DefaultEdge> getUncoveredEdges(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
+
+        Set<DefaultEdge> uncoveredEdges = new HashSet<>();
+
+        // Iterate over all edges
+        for (DefaultEdge edge : graph.edgeSet()) {
+            // Get source (s) and target (t) of the current edge
+            Vertex s = (Vertex)graph.getEdgeSource(edge);
+            Vertex t = (Vertex)graph.getEdgeTarget(edge);
+
+            // Check to see if the solution candidate covers this edge
+            if (!vertexCoverCandidate.contains(s) && !vertexCoverCandidate.contains(t)) {
+                uncoveredEdges.add(edge);
+            }
+        }
+
+        return uncoveredEdges;
+
+    }
+
     protected Vertex getRandomVertexNotInCover(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
-        // Make a copy of the input graph
-        UndirectedGraph<Vertex, DefaultEdge> graphCopy = new SimpleGraph<Vertex, DefaultEdge>(DefaultEdge.class);
-        Graphs.addGraph(graphCopy, graph);
 
-        graphCopy.removeAllVertices(vertexCoverCandidate);
+        Set<Vertex> unusedVertexSet = getVerticesNotInCover(vertexCoverCandidate, graph);
 
-        Object[] unusedVertices = graphCopy.vertexSet().toArray();
+        Object[] unusedVertices = unusedVertexSet.toArray();
 
         // Get random index
         int ndx = randomGenerator.nextInt(unusedVertices.length);
 
         return (Vertex)unusedVertices[ndx];
+    }
+
+    protected Set<Vertex> getVerticesNotInCover(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
+        Set<Vertex> unusedVertices = new HashSet<>();
+
+        for (Vertex v : graph.vertexSet()) {
+            if (!vertexCoverCandidate.contains(v)) {
+                unusedVertices.add(v);
+            }
+        }
+
+        return unusedVertices;
     }
 
     protected Set<Vertex> selectExitingVertices(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph) {
