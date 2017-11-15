@@ -166,10 +166,10 @@ public abstract class Algorithm {
         sortedVertices.sort(Comparator.comparingInt(Vertex::getScore));
 
         // Get the vertices with the lowest scores
-        Set<Vertex> highScoreVertices = new HashSet<>();
-        highScoreVertices.addAll(sortedVertices.subList(0, numVertices));
+        Set<Vertex> selectedVertices = new HashSet<>();
+        selectedVertices.addAll(sortedVertices.subList(0, numVertices));
 
-        return highScoreVertices;
+        return selectedVertices;
     }
 
     protected Set<Vertex> selectEnteringVertices(final Set<Vertex> vertexCoverCandidate) {
