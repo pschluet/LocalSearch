@@ -4,17 +4,17 @@ import numpy as np
 
 class LatexTableBuilder:
     HEADER = textwrap.dedent(r"""
-    \begin{table}[]
-    \centering
+    \begin{table}[h]
     \caption{Algorithm Performance}
     \label{algperf}
     \begin{tabular}{lrrrrrr}
-    \hline
-        & \multicolumn{3}{l}{Local Search 1} & \multicolumn{3}{l}{Local Search 2} \\ \hline
-    Dataset & Time(s)    & VC Size   & Rel Error  & Time (s)   & VC Size   & Rel Error  \\ \hline
+    \toprule
+        & \multicolumn{3}{l}{Local Search 1} & \multicolumn{3}{l}{Local Search 2} \\ \midrule
+    Dataset & Time(s)    & VC Size   & Rel Error  & Time (s)   & VC Size   & Rel Error  \\ \midrule
     """)
 
     FOOTER = textwrap.dedent(r"""
+    \bottomrule
     \end{tabular}
     \end{table}
     """)
