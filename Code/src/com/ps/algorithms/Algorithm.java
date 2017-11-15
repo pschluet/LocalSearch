@@ -37,17 +37,15 @@ public abstract class Algorithm {
         soln.startTiming();
 
         // Get initial vertex cover
-        Set<Vertex> vertexCoverCandidate = getInitialVertexCover(graph);
-        soln.addTracePoint(getQuality(vertexCoverCandidate, graph));
+        Set<Vertex> vertexCoverCandidate = getInitialVertexCover();
+        soln.addTracePoint(getQuality(vertexCoverCandidate));
         soln.setVertexCoverNodes(new HashSet<>(vertexCoverCandidate));
 
-        updateScores(vertexCoverCandidate, graph);
-
         while (soln.getElapsedTimeSec() < cutoffTimeSec && soln.getTimeSinceLastTracePointAddedSec() < STAGNANT_TIME_CUTOFF_SEC) {
-            if (isVertexCover(vertexCoverCandidate, graph)) {
+            if (isVertexCover(vertexCoverCandidate)) {
 
                 // Add point to the solution trace if the quality is better
-                int currentQuality = getQuality(vertexCoverCandidate, graph);
+                int currentQuality = getQuality(vertexCoverCandidate);
                 if (currentQuality < soln.getBestQualityAchieved()) {
                     soln.addTracePoint(currentQuality);
 
@@ -56,23 +54,21 @@ public abstract class Algorithm {
 
                 // Remove certain number of vertices and continue the search
                 removeVertices(vertexCoverCandidate);
-                updateScores(vertexCoverCandidate, graph);
             }
 
             // Select some vertices to remove from the candidate solution
-            Set<Vertex> exitingVertices = selectExitingVertices(vertexCoverCandidate, graph);
+            Set<Vertex> exitingVertices = selectExitingVertices(vertexCoverCandidate);
             vertexCoverCandidate.removeAll(exitingVertices);
 
             // Select some vertices to add to the candidate solution
-            Set<Vertex> enteringVertices = selectEnteringVertices(vertexCoverCandidate, graph);
+            Set<Vertex> enteringVertices = selectEnteringVertices(vertexCoverCandidate);
             vertexCoverCandidate.addAll(enteringVertices);
-            updateScores(vertexCoverCandidate, graph);
         }
 
         return soln;
     }
 
-    protected Set<Vertex> getInitialVertexCover(final UndirectedGraph<Vertex,DefaultEdge> graph) {
+    protected Set<Vertex> getInitialVertexCover() {
         // This implements the APPROX-VERTEX-COVER algorithm from page 1109 of
         // the CLRS Algorithms textbook (3rd Edition)
 
@@ -102,13 +98,13 @@ public abstract class Algorithm {
         return vertexCover;
     }
 
-    protected boolean isVertexCover(final Set<Vertex> solutionToCheck, final UndirectedGraph<Vertex,DefaultEdge> graph) {
+    protected boolean isVertexCover(final Set<Vertex> solutionToCheck) {
 
         // Iterate over all edges
         for (DefaultEdge edge : graph.edgeSet()) {
             // Get source (s) and target (t) of the current edge
-            Vertex s = (Vertex)graph.getEdgeSource(edge);
-            Vertex t = (Vertex)graph.getEdgeTarget(edge);
+            Vertex s = graph.getEdgeSource(edge);
+            Vertex t = graph.getEdgeTarget(edge);
 
             // Check to make sure the solution candidate contains the source or target vertex of this edge
             if (!solutionToCheck.contains(s) && !solutionToCheck.contains(t)) {
@@ -124,21 +120,21 @@ public abstract class Algorithm {
         inputVertices.removeAll(getVerticesWithLowestScores(inputVertices, numberOfVerticesToRemove));
     }
 
-    protected int getQuality(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
+    protected int getQuality(final Set<Vertex> vertexCoverCandidate) {
 
         return vertexCoverCandidate.size();
 
     }
 
-    protected int getCostDelta(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex, DefaultEdge> graph, Vertex vertexToRemove) {
+    protected int getCostDelta(final Set<Vertex> vertexCoverCandidate, Vertex vertexToRemove) {
         int costDelta = 0;
 
         // Get vertices connected to the vertex I want to remove
         Set<DefaultEdge> edges = graph.edgesOf(vertexToRemove);
         for (DefaultEdge edge : edges) {
             // Get source (s) and target (t) of the current edge
-            Vertex s = (Vertex)graph.getEdgeSource(edge);
-            Vertex t = (Vertex)graph.getEdgeTarget(edge);
+            Vertex s = graph.getEdgeSource(edge);
+            Vertex t = graph.getEdgeTarget(edge);
 
             Vertex otherEdge = s == vertexToRemove ? t : s;
 
@@ -152,17 +148,19 @@ public abstract class Algorithm {
         return costDelta;
     }
 
-    protected void updateScores(Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
+    protected void updateScores(Set<Vertex> vertexCoverCandidate) {
 
         for (Vertex v : vertexCoverCandidate) {
 
-            int costDelta = getCostDelta(vertexCoverCandidate, graph, v);
+            int costDelta = getCostDelta(vertexCoverCandidate, v);
 
             v.setScore(costDelta);
         }
     }
 
     protected Set<Vertex> getVerticesWithLowestScores(final Set<Vertex> vertexCoverCandidate, int numVertices) {
+        updateScores(vertexCoverCandidate);
+
         // Sort by score
         List<Vertex> sortedVertices = new ArrayList<>(vertexCoverCandidate);
         sortedVertices.sort(Comparator.comparingInt(Vertex::getScore));
@@ -174,15 +172,15 @@ public abstract class Algorithm {
         return highScoreVertices;
     }
 
-    protected Set<Vertex> selectEnteringVertices(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
+    protected Set<Vertex> selectEnteringVertices(final Set<Vertex> vertexCoverCandidate) {
 
         Set<Vertex> enteringVertices = new HashSet<>();
 
         for (int i = 0; i < getNumberOfVerticesToSwap(); i++) {
-            DefaultEdge uncoveredEdge = getRandomUncoveredEdge(vertexCoverCandidate, graph);
+            DefaultEdge uncoveredEdge = getRandomUncoveredEdge(vertexCoverCandidate);
             Vertex vertexToAdd;
             if (uncoveredEdge == null) {
-                vertexToAdd = getRandomVertexNotInCover(vertexCoverCandidate, graph);
+                vertexToAdd = getRandomVertexNotInCover(vertexCoverCandidate);
             } else {
                 // Select a random vertex from this edge
                 vertexToAdd = randomGenerator.nextBoolean() ? graph.getEdgeSource(uncoveredEdge) : graph.getEdgeTarget(uncoveredEdge);
@@ -196,9 +194,9 @@ public abstract class Algorithm {
         return enteringVertices;
     }
 
-    protected DefaultEdge getRandomUncoveredEdge(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
+    protected DefaultEdge getRandomUncoveredEdge(final Set<Vertex> vertexCoverCandidate) {
 
-        Set<DefaultEdge> uncoveredEdges = getUncoveredEdges(vertexCoverCandidate, graph);
+        Set<DefaultEdge> uncoveredEdges = getUncoveredEdges(vertexCoverCandidate);
 
         if (uncoveredEdges.size() == 0)
             return null;
@@ -211,15 +209,15 @@ public abstract class Algorithm {
         return (DefaultEdge)edges[ndx];
     }
 
-    protected Set<DefaultEdge> getUncoveredEdges(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
+    protected Set<DefaultEdge> getUncoveredEdges(final Set<Vertex> vertexCoverCandidate) {
 
         Set<DefaultEdge> uncoveredEdges = new HashSet<>();
 
         // Iterate over all edges
         for (DefaultEdge edge : graph.edgeSet()) {
             // Get source (s) and target (t) of the current edge
-            Vertex s = (Vertex)graph.getEdgeSource(edge);
-            Vertex t = (Vertex)graph.getEdgeTarget(edge);
+            Vertex s = graph.getEdgeSource(edge);
+            Vertex t = graph.getEdgeTarget(edge);
 
             // Check to see if the solution candidate covers this edge
             if (!vertexCoverCandidate.contains(s) && !vertexCoverCandidate.contains(t)) {
@@ -231,9 +229,9 @@ public abstract class Algorithm {
 
     }
 
-    protected Vertex getRandomVertexNotInCover(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
+    protected Vertex getRandomVertexNotInCover(final Set<Vertex> vertexCoverCandidate) {
 
-        Set<Vertex> unusedVertexSet = getVerticesNotInCover(vertexCoverCandidate, graph);
+        Set<Vertex> unusedVertexSet = getVerticesNotInCover(vertexCoverCandidate);
 
         Object[] unusedVertices = unusedVertexSet.toArray();
 
@@ -243,7 +241,7 @@ public abstract class Algorithm {
         return (Vertex)unusedVertices[ndx];
     }
 
-    protected Set<Vertex> getVerticesNotInCover(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph<Vertex,DefaultEdge> graph) {
+    protected Set<Vertex> getVerticesNotInCover(final Set<Vertex> vertexCoverCandidate) {
         Set<Vertex> unusedVertices = new HashSet<>();
 
         for (Vertex v : graph.vertexSet()) {
@@ -255,7 +253,7 @@ public abstract class Algorithm {
         return unusedVertices;
     }
 
-    protected Set<Vertex> selectExitingVertices(final Set<Vertex> vertexCoverCandidate, final UndirectedGraph graph) {
+    protected Set<Vertex> selectExitingVertices(final Set<Vertex> vertexCoverCandidate) {
         // Choose vertex/vertices with the highest scores
         return getVerticesWithLowestScores(vertexCoverCandidate, getNumberOfVerticesToSwap());
     }
