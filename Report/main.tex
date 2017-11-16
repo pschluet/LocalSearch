@@ -6,6 +6,7 @@
 
 \usepackage[ruled, linesnumbered]{algorithm2e} % For algorithms
 \usepackage{booktabs} % For formal tables
+\newcommand{\bigo}[1]{\mathcal{O}(#1)}
 
 \begin{document}
 
@@ -33,6 +34,23 @@ See \cite{cai2013numvc} for details.
 \section{Related Work}
 
 \section{Algorithms}
+Both of the local search algorithms implemented are similar in their top level structure, however, they differ in how they implement certain steps. Therefore, I will present the structure for the first algorithm then discuss how the second algorithm differs.
+\subsection{LOCAL-SEARCH-VC-1}
+The basic framework of this algorithm is based upon the decisional version of the vertex cover problem. It is an iterated $k$-vertex cover algorithm. We first determine an initial vertex cover of some integer size $k$. One vertex is then removed from this vertex cover, and two vertices are exchanged in and out until a new vertex cover is found of size $k - 1$.
+
+The methods by which vertices are chosen to be removed and exchanged are based on a $score$ function which is based on a $cost$ function. The $cost$ function for a given graph, $G$, and candidate vertex cover solution, $C$, is as follows:
+\begin{equation*}
+	cost(G,C) = \text{the number of edges not covered by $C$}
+\end{equation*}
+where a lower cost is preferred.
+
+The $score$ for a given vertex, $v$, is the increase in $cost$ that results from removing $v$ from the candidate vertex cover solution, $C$. It is defined as:
+\begin{equation*}
+	score(v) = cost(G,C) - cost(G,C')
+\end{equation*}
+where $C' = C \setminus \{v\}$. This $score$ is similar to the $dscore$ in REFERENCE HERE except that it is only calculated for vertices in $C$ to save computation time (as opposed to calculating the $dscore$ for all vertices in the graph).
+
+Algorithm \ref{alg:ls1} shows the overall structure of the algorithm. The APPROX-VERTEX-COVER algorithm REFERENCE HERE used to find the initial vertex cover is a greedy approximation algorithm detailed in Algorithm \ref{alg:avc}.
 
 \begin{algorithm}[h]
 	\SetAlgoNoLine
@@ -45,9 +63,9 @@ See \cite{cai2013numvc} for details.
 			Remove the vertex in $C$ with the lowest $score$\\
 		}
 		$u$ = the vertex in $C$ with the lowest $score$\\
-		$C$ = $C \setminus$ {$u$}\\
+		$C$ = $C$ $\setminus$ \{$u$\}\\
 		$v$ = a random uncovered edge in $V \setminus C$\\
-		$C$ = $C \cup$ {$v$}
+		$C$ = $C$ $\cup$ \{$v$\}
 	}
 	\Return $C*$
 	\caption{LOCAL-SEARCH-VC-1}
@@ -62,7 +80,7 @@ See \cite{cai2013numvc} for details.
 	$E'$ = $E$\\
 	\While{$E' \neq \emptyset$}{
 		let ($u$,$v$) be an arbitrary edge of $E'$\\
-		$C$ = $C \cup$ {$u$,$v$}\\
+		$C$ = $C$ $\cup$ \{$u$,$v$\}\\
 		remove from $E'$ every edge incident on either $u$ or $v$
 	}
 	\Return $C$
@@ -70,6 +88,10 @@ See \cite{cai2013numvc} for details.
 	\caption{APPROX-VERTEX-COVER}
 	\label{alg:avc}
 \end{algorithm}
+
+Given a graph with vertex set $V$ and edge set $E$, the time complexity for a single time through the \textbf{while} loop in Algorithm \ref{alg:ls1} is $\bigo{V * E}$. The most expensive operation that drives this time complexity is the calculation of the scores for each of the vertices in the candidate vertex cover solution, $C$. To update the scores, we must loop through each of the vertices, $v_i$, in $C$, and inside this loop, we must loop through each of the edges connected to $v_i$. The space complexity for Algorithm \ref{alg:ls1} is $\bigo{V + E}$ because we must store the graph itself.
+
+The time complexity for Algorithm \ref{alg:avc} is $\bigo{V + E}$ REFERENCE HERE, and its space complexity is $\bigo{V + E}$ because we must store the graph.  
 
 \section{Empirical Evaluation}
 
