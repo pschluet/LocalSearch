@@ -27,7 +27,6 @@ Sample abstract text
 \maketitle
  
 \section{Introduction} \label{sec:intro}
-See \cite{cai2013numvc} for details.
 
 \section{Problem Definition}
 
@@ -48,9 +47,9 @@ The $score$ for a given vertex, $v$, is the increase in $cost$ that results from
 \begin{equation*}
 	score(v) = cost(G,C) - cost(G,C')
 \end{equation*}
-where $C' = C \setminus \{v\}$. This $score$ is similar to the $dscore$ in REFERENCE HERE except that it is only calculated for vertices in $C$ to save computation time (as opposed to calculating the $dscore$ for all vertices in the graph).
+where $C' = C \setminus \{v\}$. This $score$ is similar to the $dscore$ in \cite{cai2013numvc} except that it is only calculated for vertices in $C$ to save computation time (as opposed to calculating the $dscore$ for all vertices in the graph).
 
-Algorithm \ref{alg:ls1} shows the overall structure of the algorithm. The APPROX-VERTEX-COVER algorithm REFERENCE HERE used to find the initial vertex cover is a greedy approximation algorithm detailed in Algorithm \ref{alg:avc}.
+Algorithm \ref{alg:ls1} shows the overall structure of the algorithm. The APPROX-VERTEX-COVER algorithm used to find the initial vertex cover is a greedy approximation algorithm detailed in \cite{intro_alg_2009} and shown in Algorithm \ref{alg:avc}.
 
 \begin{algorithm}[h]
 	\SetAlgoNoLine
@@ -91,10 +90,10 @@ Algorithm \ref{alg:ls1} shows the overall structure of the algorithm. The APPROX
 
 Given a graph with vertex set $V$ and edge set $E$, the time complexity for a single time through the \textbf{while} loop in Algorithm \ref{alg:ls1} is $\bigo{V * E}$. The most expensive operation that drives this time complexity is the calculation of the scores for each of the vertices in the candidate vertex cover solution, $C$. To update the scores, we must loop through each of the vertices, $v_i$, in $C$, and inside this loop, we must loop through each of the edges connected to $v_i$. The space complexity for Algorithm \ref{alg:ls1} is $\bigo{V + E}$ because we must store the graph itself.
 
-The time complexity for Algorithm \ref{alg:avc} is $\bigo{V + E}$ REFERENCE HERE, and its space complexity is $\bigo{V + E}$ because we must store the graph.  
+The time complexity for Algorithm \ref{alg:avc} is $\bigo{V + E}$ \cite{intro_alg_2009}, and its space complexity is $\bigo{V + E}$ because we must store the graph.  
 
 \subsection{LOCAL-SEARCH-VC-2}
-The second local search algorithm has the same overall framework as Algorithm \ref{alg:ls1} except that it removes multiple vertices once a vertex cover is found. The number of vertices it removes is not a constant, rather, it scales with the current size of the vertex cover candidate solution. More specifically, in place of line 5 in Algorithm \ref{alg:ls1}, we remove the $n$ vertices with the lowest $scores$ where
+The second local search algorithm has the same overall structure as Algorithm \ref{alg:ls1} except that it removes multiple vertices once a vertex cover is found. The number of vertices it removes is not a constant, rather, it scales with the current size of the vertex cover candidate solution. More specifically, in place of line 5 in Algorithm \ref{alg:ls1}, we remove the $n$ vertices with the lowest $scores$ where
 
 \begin{equation}
 	n = \max(0.01 * \textrm{the current number of vertices in $C$}, 1)
@@ -105,7 +104,7 @@ This alteration does not change the time complexity or space complexity of the a
 The advantage of this approach is that the algorithm can complete its search much more quickly, and, as it gets closer to the optimal solution, fewer vertices are removed at each step. This allows for a more fine-grained search once the solution is closer to the optimal. As shown in section \ref{sec:eval}, it obtains similar performance to LOCAL-SEARCH-VC-1 in significantly less time.
 
 \section{Empirical Evaluation} \label{sec:eval}
-In order to evaluate the performance of LOCAL-SEARCH-VC-1 and LOCAL-SEARCH-VC-2, the algorithms were exercised on 11 different graph instances (some real and some random) taken from the 10th DIMACS challenge. Each algorithm was run 10 times (with a different random seed each time) for each data set. The average vertex cover size achieved along with the average time taken to reach that solution were recorded. The relative error for each instance was calculated as follows
+In order to evaluate the performance of LOCAL-SEARCH-VC-1 and LOCAL-SEARCH-VC-2, the algorithms were exercised on 11 different graph instances (some real and some random) taken from the 10th DIMACS challenge. Each algorithm was run 10 times (with a different random seed each time) for each data set. The average vertex cover size achieved along with the average time taken to reach that solution was recorded. The relative error for each instance was calculated as follows
 \begin{equation*}
 	\textrm{Rel Error} = \frac{\textrm{avg. algorithm vertex cover size} - \textrm{optimal vertex cover size}}{\textrm{optimal vertex cover size}}
 \end{equation*} 
@@ -135,7 +134,7 @@ Table \ref{table:algperf} summarizes the results for both algorithms on all grap
 \end{table}
 
 \section{Discussion}
-As shown in Table \ref{table:algperf}, LOCAL-SEARCH-VC-2 obtains similar performance to LOCAL-SEARCH-VC-1 in significantly less time. On average, it takes about 53\% of the time to obtain a solution that has 1.06 times as much relative error. In two instances (email and power) LOCAL-SEARCH-VC-2 actually had lower relative error.
+As shown in Table \ref{table:algperf}, LOCAL-SEARCH-VC-2 obtains similar performance to LOCAL-SEARCH-VC-1 in significantly less time. On average, it takes about 53\% of the time to obtain a solution that has 1.06 times as much relative error. In two instances (email and power) LOCAL-SEARCH-VC-2 actually has lower relative error.
 
 \section{Conclusion}
 
