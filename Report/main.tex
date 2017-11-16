@@ -19,7 +19,7 @@
 \email{paul@paulschlueter.com}
 
 \begin{abstract}
-The decision version of vertex cover is NP-Complete.
+Sample abstract text
 \end{abstract}
 
 \keywords{CSE 6140, Minimum Vertex Cover, Local Search}
@@ -93,14 +93,31 @@ Given a graph with vertex set $V$ and edge set $E$, the time complexity for a si
 
 The time complexity for Algorithm \ref{alg:avc} is $\bigo{V + E}$ REFERENCE HERE, and its space complexity is $\bigo{V + E}$ because we must store the graph.  
 
-\section{Empirical Evaluation}
+\subsection{LOCAL-SEARCH-VC-2}
+The second local search algorithm has the same overall framework as Algorithm \ref{alg:ls1} except that it removes multiple vertices once a vertex cover is found. The number of vertices it removes is not a constant, rather, it scales with the current size of the vertex cover candidate solution. More specifically, in place of line 5 in Algorithm \ref{alg:ls1}, we remove the $n$ vertices with the lowest $scores$ where
+
+\begin{equation}
+	n = \max(0.01 * \textrm{the current number of vertices in $C$}, 1)
+\end{equation}
+
+This alteration does not change the time complexity or space complexity of the algorithm. They remain $\bigo{V * E}$ and $\bigo{V + E}$ respectively.
+
+The advantage of this approach is that the algorithm can complete its search much more quickly, and, as it gets closer to the optimal solution, fewer vertices are removed at each step. This allows for a more fine-grained search once the solution is closer to the optimal. As shown in section \ref{sec:eval}, it obtains similar performance to LOCAL-SEARCH-VC-1 in significantly less time.
+
+\section{Empirical Evaluation} \label{sec:eval}
+In order to evaluate the performance of LOCAL-SEARCH-VC-1 and LOCAL-SEARCH-VC-2, the algorithms were exercised on 11 different graph instances (some real and some random) taken from the 10th DIMACS challenge. Each algorithm was run 10 times (with a different random seed each time) for each data set. The average vertex cover size achieved along with the average time taken to reach that solution were recorded. The relative error for each instance was calculated as follows
+\begin{equation*}
+	\textrm{Rel Error} = \frac{\textrm{avg. algorithm vertex cover size} - \textrm{optimal vertex cover size}}{\textrm{optimal vertex cover size}}
+\end{equation*} 
+
+Table \ref{table:algperf} summarizes the results for both algorithms on all graph data sets.
 
 \begin{table}[h]
 	\caption{Algorithm Performance}
-	\label{algperf}
+	\label{table:algperf}
 	\begin{tabular}{lrrrrrr}
 		\toprule
-		& \multicolumn{3}{l}{Local Search 1} & \multicolumn{3}{l}{Local Search 2} \\ \midrule
+		& \multicolumn{3}{l}{LOCAL-SEARCH-VC-1} & \multicolumn{3}{l}{LOCAL-SEARCH-VC-2} \\ \midrule
 		Dataset & Time(s)    & VC Size   & Rel Error  & Time (s)   & VC Size   & Rel Error  \\ \midrule
 		as-22july06    & 29.49   & 3364      & 0.02   & 4.38   & 3373      & 0.02   \\
 		delaunay n10    & 0.34   & 759      & 0.08   & 0.20   & 761      & 0.08   \\
@@ -118,9 +135,9 @@ The time complexity for Algorithm \ref{alg:avc} is $\bigo{V + E}$ REFERENCE HERE
 \end{table}
 
 \section{Discussion}
+As shown in Table \ref{table:algperf}, LOCAL-SEARCH-VC-2 obtains similar performance to LOCAL-SEARCH-VC-1 in significantly less time. On average, it takes about 53\% of the time to obtain a solution that has 1.06 times as much relative error. In two instances (email and power) LOCAL-SEARCH-VC-2 actually had lower relative error.
 
 \section{Conclusion}
-See Section \ref{sec:intro}.
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{citations} 
