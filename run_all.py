@@ -1,6 +1,7 @@
 import os
 from glob import glob
 from subprocess import call
+import random
 
 if __name__ == "__main__":
     data_files = [os.path.basename(x) for x in glob("Data/*")]
@@ -20,7 +21,8 @@ if __name__ == "__main__":
         else:
             num_random_seeds = num_random_seeds_min
         for algorithm in algorithms:
-            for seed in range(1,num_random_seeds + 1):
+            for i in range(1,num_random_seeds + 1):
+                seed = int(random.randrange(0,1e5))
                 args = "-inst {} -alg {} -time {} -seed {}".format(data_file, algorithm, time_limit_sec, seed)
                 cmd = "java -cp {} com.ps.Main {}".format(classPath, args)
 
