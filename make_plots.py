@@ -3,6 +3,7 @@ from glob import glob
 import re
 from make_results_table import OPT_VALS
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 def load_data():
     f_names = glob("output/*.trace")
@@ -89,6 +90,46 @@ def get_curve_vals(data, data_keys, column, num_curves):
 
     return np.linspace(min_val, max_val, num_curves)
 
+def get_times_required_to_reach_score(data, score):
+    times = []
+    for d in data:
+        last_ndx = np.argwhere(d[:,1] <= score)[-1][0]
+        times.append(d[last_ndx,0])
+    return times
+
+def get_boxplot_data(data, keys):
+    # Find max error
+    d1 = [x[-1,:] for x in data[keys[0]]]
+    d2 = [x[-1,:] for x in data[keys[1]]]
+    d1_max_score = np.max([x[1] for x in d1])
+    d2_max_score = np.max([x[1] for x in d2])
+    max_score = max(d1_max_score, d2_max_score)
+
+    # Get times required to reach max_score
+    d1_times = get_times_required_to_reach_score(data[keys[0]], max_score)
+    d2_times = get_times_required_to_reach_score(data[keys[1]], max_score)
+
+    return (max_score, d1_times, d2_times)
+
+def make_box_plots(data, data_key_sets):
+    data_keys = [item for sublist in data_key_sets for item in sublist]
+
+    power_keys = [x for x in data_keys if 'power' in x]
+    power_data = get_boxplot_data(data, power_keys)
+
+    star2_keys = [x for x in data_keys if 'star2' in x]
+    star2_data = get_boxplot_data(data, star2_keys)
+
+    plt.figure()
+    sns.boxplot(['LS1', 'LS2'], [power_data[1], power_data[2]])
+    plt.ylabel('Run Time [sec]')
+    plt.title('Time Required to Reach {:.2f}% Relative Error on power'.format(power_data[0]))
+
+    plt.figure()
+    sns.boxplot(['LS1', 'LS2'], [star2_data[1], star2_data[2]])
+    plt.ylabel('Run Time [sec]')
+    plt.title('Time Required to Reach {:.2f}% Relative Error on star2'.format(star2_data[0]))
+
 if __name__=="__main__":
     data = load_data()
 
@@ -103,5 +144,7 @@ if __name__=="__main__":
         for key in data_keys:
             make_qrtd(data, key, rel_err_curve_vals, time_lims)
             make_sqd(data, key, time_curve_vals, rel_err_lims)
+
+    make_box_plots(data, data_key_sets)
 
     plt.show()
