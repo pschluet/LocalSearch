@@ -4,6 +4,9 @@ import re
 from make_results_table import OPT_VALS
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
+
+PLOT_DIR = 'Report/plots'
 
 def load_data():
     f_names = glob("output/*.trace")
@@ -124,16 +127,22 @@ def make_box_plots(data, data_key_sets):
     sns.boxplot(['LS1', 'LS2'], [power_data[1], power_data[2]])
     plt.ylabel('Run Time [sec]')
     plt.title('Time Required to Reach {:.2f}% Relative Error on power'.format(power_data[0]))
+    plt.savefig(PLOT_DIR + '/boxplot_power.png')
 
     plt.figure()
     sns.boxplot(['LS1', 'LS2'], [star2_data[1], star2_data[2]])
     plt.ylabel('Run Time [sec]')
     plt.title('Time Required to Reach {:.2f}% Relative Error on star2'.format(star2_data[0]))
+    plt.savefig(PLOT_DIR + '/boxplot_star2.png')
 
 if __name__=="__main__":
     data = load_data()
 
     data_key_sets = [['power_LS1', 'power_LS2'], ['star2_LS1', 'star2_LS2']]
+
+    # Make plot directory if it doesn't exist
+    if not os.path.exists(PLOT_DIR):
+        os.makedirs(PLOT_DIR)
 
     for data_keys in data_key_sets:
         rel_err_curve_vals = get_curve_vals(data, data_keys, 1, 4)
@@ -143,8 +152,8 @@ if __name__=="__main__":
 
         for key in data_keys:
             make_qrtd(data, key, rel_err_curve_vals, time_lims)
+            plt.savefig(PLOT_DIR + '/qrtd_' + key + '.png')
             make_sqd(data, key, time_curve_vals, rel_err_lims)
+            plt.savefig(PLOT_DIR + '/sqd_' + key + '.png')
 
     make_box_plots(data, data_key_sets)
-
-    plt.show()
