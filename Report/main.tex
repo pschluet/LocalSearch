@@ -27,15 +27,26 @@ Sample abstract text
 \maketitle
  
 \section{Introduction} \label{sec:intro}
+This paper details two different local search algorithms developed to solve the well-known Minimum Vertex Cover problem. For a given graph, a vertex cover is a subset of vertices such that each edge has at least one edge in the vertex cover. The minimum vertex cover is the vertex cover with the minimum number of vertices. 
+
+The general framework of my approach is based closely on the FastVC local search framework in \cite{cai2015fastvc}. An initial suboptimal solution is found in an efficient manner, then one or more vertices are removed from that solution and a search is initiated to find a solution with fewer vertices. That search is accomplished by continually swapping out vertices until a vertex cover is found, and the process is repeated until a cutoff time is reached. The main differences in my approaches are
+\begin{enumerate}
+	\item the algorithm used to find the initial vertex cover
+	\item the methods by which vertices are removed and exchanged in the local search
+\end{enumerate}
+
+On experiments on real-world graphs ranging in size from roughly 30 to 23,000 vertices, both of my local search algorithms found solutions within 8\% of optimal for all graphs. My LOCAL-SEARCH-VC-2 algorithm found solutions that were roughly the same size as my LOCAL-SEARCH-VC-1, but it found them much more quickly (in about half the time on average).
+
 
 \section{Problem Definition}
+Given an undirected graph, $G$, with edge set $E$ and vertex set $V$, a vertex cover is a subset of vertices $S \subseteq V$ such that every edge in $E$ has at least one vertex in $S$.
 
 \section{Related Work}
 
 \section{Algorithms}
 Both of the local search algorithms implemented are similar in their top level structure, however, they differ in how they implement certain steps. Therefore, I will present the structure for the first algorithm then discuss how the second algorithm differs.
 \subsection{LOCAL-SEARCH-VC-1}
-The basic framework of this algorithm is based upon the decisional version of the vertex cover problem. It is an iterated $k$-vertex cover algorithm. We first determine an initial vertex cover of some integer size $k$. One vertex is then removed from this vertex cover, and two vertices are exchanged in and out until a new vertex cover is found of size $k - 1$.
+The basic framework of this algorithm is based upon the decision version of the vertex cover problem. It is an iterated $k$-vertex cover algorithm. We first determine an initial vertex cover of some integer size $k$. One vertex is then removed from this vertex cover, and two vertices are exchanged in and out until a new vertex cover is found of size $k - 1$.
 
 The methods by which vertices are chosen to be removed and exchanged are based on a $score$ function which is based on a $cost$ function. The $cost$ function for a given graph, $G$, and candidate vertex cover solution, $C$, is as follows:
 \begin{equation*}
@@ -88,18 +99,17 @@ Algorithm \ref{alg:ls1} shows the overall structure of the algorithm. The APPROX
 	\label{alg:avc}
 \end{algorithm}
 
-Given a graph with vertex set $V$ and edge set $E$, the time complexity for a single time through the \textbf{while} loop in Algorithm \ref{alg:ls1} is $\bigo{V * E}$. The most expensive operation that drives this time complexity is the calculation of the scores for each of the vertices in the candidate vertex cover solution, $C$. To update the scores, we must loop through each of the vertices, $v_i$, in $C$, and inside this loop, we must loop through each of the edges connected to $v_i$. The space complexity for Algorithm \ref{alg:ls1} is $\bigo{V + E}$ because we must store the graph itself.
+Given a graph with vertex set $V$ and edge set $E$, the time complexity for a single time through the \textbf{while} loop in Algorithm \ref{alg:ls1} is $\bigo{VE}$. The most expensive operation that drives this time complexity is the calculation of the scores for each of the vertices in the candidate vertex cover solution, $C$. To update the scores, we must loop through each of the vertices, $v_i$, in $C$, and inside this loop, we must loop through each of the edges connected to $v_i$. The space complexity for Algorithm \ref{alg:ls1} is $\bigo{V + E}$ because we must store the graph itself.
 
 The time complexity for Algorithm \ref{alg:avc} is $\bigo{V + E}$ \cite{intro_alg_2009}, and its space complexity is $\bigo{V + E}$ because we must store the graph.  
 
 \subsection{LOCAL-SEARCH-VC-2}
 The second local search algorithm has the same overall structure as Algorithm \ref{alg:ls1} except that it removes multiple vertices once a vertex cover is found. The number of vertices it removes is not a constant, rather, it scales with the current size of the vertex cover candidate solution. More specifically, in place of line 5 in Algorithm \ref{alg:ls1}, we remove the $n$ vertices with the lowest $scores$ where
-
 \begin{equation}
 	n = \max(0.01 * \textrm{the current number of vertices in $C$}, 1)
 \end{equation}
 
-This alteration does not change the time complexity or space complexity of the algorithm. They remain $\bigo{V * E}$ and $\bigo{V + E}$ respectively.
+This alteration does not change the time complexity or space complexity of the algorithm. They remain $\bigo{VE}$ and $\bigo{V + E}$ respectively.
 
 The advantage of this approach is that the algorithm can complete its search much more quickly, and, as it gets closer to the optimal solution, fewer vertices are removed at each step. This allows for a more fine-grained search once the solution is closer to the optimal. As shown in section \ref{sec:eval}, it obtains similar performance to LOCAL-SEARCH-VC-1 in significantly less time.
 
@@ -111,7 +121,7 @@ In order to evaluate the performance of LOCAL-SEARCH-VC-1 and LOCAL-SEARCH-VC-2,
 
 Table \ref{table:algperf} summarizes the results for both algorithms on all graph data sets.
 
-\begin{table}[h]
+\begin{table*}[h]
 	\caption{Algorithm Performance}
 	\label{table:algperf}
 	\begin{tabular}{lrrrrrr}
@@ -131,7 +141,7 @@ Table \ref{table:algperf} summarizes the results for both algorithms on all grap
 		star2    & 31.30   & 4867      & 0.07   & 4.12   & 4867      & 0.07   \\
 		\bottomrule
 	\end{tabular}
-\end{table}
+\end{table*}
 
 \section{Discussion}
 As shown in Table \ref{table:algperf}, LOCAL-SEARCH-VC-2 obtains similar performance to LOCAL-SEARCH-VC-1 in significantly less time. On average, it takes about 53\% of the time to obtain a solution that has 1.06 times as much relative error. In two instances (email and power) LOCAL-SEARCH-VC-2 actually has lower relative error.
