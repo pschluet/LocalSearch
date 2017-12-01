@@ -81,15 +81,27 @@ def get_all_data_lims(data, data_keys, column):
 
     return vals
 
-def get_curve_vals(data, data_keys, column, num_curves):
+def get_curve_vals(data, data_keys, column, num_curves, method):
     min_val = -float('inf')
     max_val = float('inf')
+
+    if method == 1:
+        min_val = -min_val
+        max_val = -max_val
 
     for key in data_keys:
         inst_data = data[key]
         for run_data in inst_data:
-            min_val = max((min_val, np.min(run_data[:,column])))
-            max_val = min((max_val, np.max(run_data[:,column])))
+            if method == 0:
+                min_val = max((min_val, np.min(run_data[:,column])))
+                max_val = min((max_val, np.max(run_data[:,column])))
+            else:
+                min_val = min((min_val, np.min(run_data[:, column])))
+                max_val = max((max_val, np.max(run_data[:, column])))
+
+    if method == 1:
+        min_val *= 1.3
+        # max_val *= 0.7
 
     return np.linspace(min_val, max_val, num_curves)
 
@@ -145,12 +157,17 @@ if __name__=="__main__":
         os.makedirs(PLOT_DIR)
 
     for data_keys in data_key_sets:
-        rel_err_curve_vals = get_curve_vals(data, data_keys, 1, 4)
+        rel_err_curve_vals = get_curve_vals(data, data_keys, 1, 4, method=0)
+
         rel_err_lims = get_all_data_lims(data, data_keys, 1)
-        time_curve_vals = get_curve_vals(data, data_keys, 0, 4)
+        time_curve_vals_both = get_curve_vals(data, data_keys, 0, 4, method=1)
+        time_curve_vals_single1 = get_curve_vals(data, [data_keys[0]], 0, 4, method=0)
+        time_curve_vals_single2 = get_curve_vals(data, [data_keys[1]], 0, 4, method=0)
         time_lims = get_all_data_lims(data, data_keys, 0)
 
         for key in data_keys:
+            time_curve_vals = get_curve_vals(data, [key], 0, 4, method=1)
+            time_curve_vals[0] = time_curve_vals_both[0]
             make_qrtd(data, key, rel_err_curve_vals, time_lims)
             plt.savefig(PLOT_DIR + '/qrtd_' + key + '.png')
             make_sqd(data, key, time_curve_vals, rel_err_lims)
