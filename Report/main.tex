@@ -39,9 +39,10 @@ On experiments on real-world graphs ranging in size from roughly 30 to 23,000 ve
 
 
 \section{Problem Definition}
-Given an undirected graph, $G$, with edge set $E$ and vertex set $V$, a vertex cover is a subset of vertices $S \subseteq V$ such that every edge in $E$ has at least one vertex in $S$.
+Given an undirected graph, $G$, with edge set $E$ and vertex set $V$, a vertex cover is a subset of vertices $S \subseteq V$ such that each edge $(u,v) \in E$ is covered by $S$. Edge $(u,v)$ is covered by $S$ if $u \in S \vee v \in S$. In this paper, our goal is to find a vertex cover as small as possible (where $|S|$ is minimized). 
 
 \section{Related Work}
+
 
 \section{Algorithms}
 Both of the local search algorithms implemented are similar in their top level structure, however, they differ in how they implement certain steps. Therefore, I will present the structure for the first algorithm then discuss how the second algorithm differs.
