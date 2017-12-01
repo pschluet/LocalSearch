@@ -8,6 +8,11 @@ import os
 
 PLOT_DIR = 'Report/plots'
 
+sqd_subplot = 1
+qrtd_subplot = 1
+QRTD_FIG = 351431
+SQD_FIG = 64223
+
 def load_data():
     f_names = glob("output/*.trace")
     keys = [get_key_from_file_path(x) for x in f_names]
@@ -36,12 +41,26 @@ def unpack_values(data, data_keys, column):
 
 def make_qrtd(data, data_key, rel_err_curve_vals, time_lims):
     # Fix the quality (different curves for different rel. errors)
+    global qrtd_subplot
+    global QRTD_FIG
+    fig = plt.figure(QRTD_FIG, figsize=(8,4))
+    fig.add_subplot(120 + qrtd_subplot)
+    if qrtd_subplot == 1:
+        plt.ylabel('P(solve)')
+    qrtd_subplot += 1
     make_distrib_plot(data, data_key, 1, rel_err_curve_vals, time_lims)
     plt.xlabel('Run Time [sec]')
     plt.legend(['{:.1f}%'.format(x) for x in rel_err_curve_vals])
 
 def make_sqd(data, data_key, time_curve_vals, rel_err_lims):
     # Fix the time (different curves for different times)
+    global sqd_subplot
+    global SQD_FIG
+    fig = plt.figure(SQD_FIG, figsize=(8,4))
+    fig.add_subplot(120 + sqd_subplot)
+    if sqd_subplot == 1:
+        plt.ylabel('P(solve)')
+    sqd_subplot += 1
     make_distrib_plot(data, data_key, 0, time_curve_vals, rel_err_lims)
     plt.xlabel('Relative Error [%]')
     plt.legend(['{:.2f}s'.format(x) for x in time_curve_vals])
@@ -51,13 +70,11 @@ def make_distrib_plot(data, data_key, col_to_fix, curve_vals, xlims):
     x_col = 0 if col_to_fix == 1 else 1
     x_pts = np.linspace(xlims[0], xlims[1], 1000)
 
-    plt.figure()
     for curve_val in curve_vals:
         y_pts = []
         for x_pt in x_pts:
             y_pts.append(get_percentage_solved(inst_data, x_col, x_pt, col_to_fix, curve_val))
         plt.plot(x_pts, y_pts)
-    plt.ylabel('P(solve)')
     plt.title(data_key)
 
 def get_percentage_solved(inst_data, col_a, lim_a, col_b, lim_b):
@@ -163,13 +180,21 @@ if __name__=="__main__":
         time_curve_vals_both = get_curve_vals(data, data_keys, 0, 4, method=1)
         time_lims = get_all_data_lims(data, data_keys, 0)
 
+        qrtd_subplot = 1
+        sqd_subplot = 1
+        QRTD_FIG += 1
+        SQD_FIG += 1
+
         for key in data_keys:
             time_curve_vals = get_curve_vals(data, [key], 0, 4, method=1)
             time_curve_vals[0] = time_curve_vals_both[0]
 
             make_qrtd(data, key, rel_err_curve_vals, time_lims)
-            plt.savefig(PLOT_DIR + '/qrtd_' + key + '.png')
             make_sqd(data, key, time_curve_vals, rel_err_lims)
-            plt.savefig(PLOT_DIR + '/sqd_' + key + '.png')
 
+        plt.figure(QRTD_FIG)
+        plt.savefig(PLOT_DIR + '/qrtd_' + key[:-4] + '.png')
+
+        plt.figure(SQD_FIG)
+        plt.savefig(PLOT_DIR + '/sqd_' + key[:-4] + '.png')
     make_box_plots(data, data_key_sets)
