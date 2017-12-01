@@ -115,7 +115,23 @@ This alteration does not change the time complexity or space complexity of the a
 The advantage of this approach is that the algorithm can complete its search much more quickly, and, as it gets closer to the optimal solution, fewer vertices are removed at each step. This allows for a more fine-grained search once the solution is closer to the optimal. As shown in section \ref{sec:eval}, it obtains similar performance to LOCAL-SEARCH-VC-1 in significantly less time.
 
 \section{Empirical Evaluation} \label{sec:eval}
-In order to evaluate the performance of LOCAL-SEARCH-VC-1 and LOCAL-SEARCH-VC-2, the algorithms were exercised on 11 different graph instances (some real and some random) taken from the 10th DIMACS challenge. Each algorithm was run 10 times (with a different random seed each time) for each data set, and a cutoff time of 10 minutes was used for each run. The average vertex cover size achieved along with the average time taken to reach that solution was recorded. The relative error for each instance was calculated as follows
+In order to evaluate the performance of LOCAL-SEARCH-VC-1 and LOCAL-SEARCH-VC-2, the algorithms were exercised on 11 different graph instances (some real and some random) taken from the 10th DIMACS challenge. 
+Each algorithm was run 10 times (with a different random seed each time) for each data set, and a cutoff time of 10 minutes was used for each run. Table \ref{table:platfm} lists the details of the platform used.
+\begin{table}[h]
+	\caption{Platform Characteristics}
+	\label{table:platfm}
+	\begin{tabular}{ll}
+		\toprule
+		Processor    		&	Intel Core i5 	\\
+		Number of Cores		&	4				\\
+		Processor Speed 	&	2.7 GHz			\\
+		RAM					&	16 GB			\\
+		Language/Compiler	&	Java v1.8.0\_74	\\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+The average vertex cover size achieved along with the average time taken to reach that solution was recorded. The relative error for each instance was calculated as follows
 \begin{equation*}
 	\textrm{Rel Error} = \frac{\textrm{avg. algorithm vertex cover size} - \textrm{optimal vertex cover size}}{\textrm{optimal vertex cover size}}
 \end{equation*} 
