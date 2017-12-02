@@ -35,17 +35,21 @@ The general framework of my approach is based closely on the FastVC local search
 	\item the methods by which vertices are removed and exchanged in the local search
 \end{enumerate}
 
-On experiments on real-world graphs ranging in size from roughly 30 to 23,000 vertices, both of my local search algorithms found solutions within 8\% of optimal for all graphs. My LOCAL-SEARCH-VC-2 algorithm found solutions that were roughly the same size as my LOCAL-SEARCH-VC-1, but it found them much more quickly (in about half the time on average).
+On experiments on real-world graphs ranging in size from roughly 30 to 23,000 vertices, both of my local search algorithms found solutions within 8\% of optimal for all graphs. My LOCAL-SEARCH-VC-2 algorithm found solutions that were roughly the same quality as my LOCAL-SEARCH-VC-1, but it found them much more quickly (in about half the time on average).
 
 
 \section{Problem Definition}
 Given an undirected graph, $G$, with edge set $E$ and vertex set $V$, a vertex cover is a subset of vertices $S \subseteq V$ such that each edge $(u,v) \in E$ is covered by $S$. Edge $(u,v)$ is covered by $S$ if $u \in S \vee v \in S$. In this paper, our goal is to find a vertex cover as small as possible (where $|S|$ is minimized). 
 
 \section{Related Work}
+The Minimum Vertex Cover (MVC) problem is the optimization version of the well-known Vertex Cover decision problem. It has a wide variety of applications including problems in the domains of network security, facility location, sensor networks \cite{kavalci2014}, and data aggregation. The state-of-the-art approximation algorithms can only achieve an approximation ratio of 2-$o(1)$ \cite{halperin_2002}, and exact methods (such as Branch and Bound) quickly become unfeasible as problem size increases.
 
+As such, there have been a wide variety of local search algorithms proposed for the MVC problem due to their ability to find solutions for large instances in reasonable times. These algorithms use advanced heuristics such as max-gain vertex pair selection \cite{richter_helmert_gretton}, edge weighting \cite{richter_helmert_gretton, cai2010}, k-improvement \cite{andrade_resende_werneck}, configuration checking \cite{cai_su_sattar_2011}, minimum loss removing and two-stage exchange \cite{cai2013numvc}. 
+
+Most of these algorithms are evaluated an the DIMACS and BHOSLIB benchmarks from the academic community; however, there has also been an effort to design algorithms (e.g. FastVC in \cite{cai2015fastvc}) to handle much larger graph instances. The FastVC algorithm is among the state-of-the-art in its performance on the MVC problem for massive graphs \cite{cai2015fastvc}, and, for this reason, the algorithms developed in this paper are modeled after this general framework.
 
 \section{Algorithms}
-Both of the local search algorithms implemented are similar in their top level structure, however, they differ in how they implement certain steps. Therefore, I will present the structure for the first algorithm then discuss how the second algorithm differs.
+Both of the local search algorithms proposed in this paper are similar in their top level structure, however, they differ in how they implement certain steps. Therefore, I will present the structure for the first algorithm then discuss how the second algorithm differs.
 \subsection{LOCAL-SEARCH-VC-1}
 The basic framework of this algorithm is based upon the decision version of the vertex cover problem. It is an iterated $k$-vertex cover algorithm. We first determine an initial vertex cover of some integer size $k$. One vertex is then removed from this vertex cover, and two vertices are exchanged in and out until a new vertex cover is found of size $k - 1$.
 
@@ -143,7 +147,7 @@ Table \ref{table:algperf} summarizes the results for both algorithms on all grap
 	\label{table:algperf}
 	\begin{tabular}{lrrrrrr}
 		\toprule
-		& \multicolumn{3}{l}{Local Search 1} & \multicolumn{3}{l}{Local Search 2} \\ \midrule
+		& \multicolumn{3}{l}{LOCAL-SEARCH-VC-1} & \multicolumn{3}{l}{LOCAL-SEARCH-VC-2} \\ \midrule
 		Dataset & Time(s)    & VC Size   & Rel Error  & Time (s)   & VC Size   & Rel Error  \\ \midrule
 		as-22july06    & 29.19   & 3363      & 0.02   & 4.52   & 3380      & 0.02   \\
 		delaunay n10    & 0.35   & 758      & 0.08   & 0.20   & 761      & 0.08   \\
