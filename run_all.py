@@ -4,12 +4,13 @@ from subprocess import call
 import random
 
 if __name__ == "__main__":
-    data_files = [os.path.basename(x) for x in glob("Data/*")]
+    random.seed(5763424)
+    
+    data_files = [os.path.abspath(x) for x in glob("./Data/*")]
     algorithms = ["LS1", "LS2"]
     num_random_seeds_min = 10
     num_random_seeds_max = 100
     time_limit_sec = 600
-    classPath = "Main.jar:lib/commons-cli-1.4.jar:lib/jgrapht-core-1.0.1.jar"
     file_name = "out.txt"
 
     if os.path.isfile(file_name):
@@ -24,14 +25,14 @@ if __name__ == "__main__":
             for i in range(1,num_random_seeds + 1):
                 seed = int(random.randrange(0,1e5))
                 args = "-inst {} -alg {} -time {} -seed {}".format(data_file, algorithm, time_limit_sec, seed)
-                cmd = "java -cp {} com.ps.Main {}".format(classPath, args)
+                cmd = "java -jar Main-1.0-SNAPSHOT.jar {}".format(args)
 
                 txt = "Running {}".format(args)
                 with open(file_name, "a") as file:
                     file.write(txt + "\n")
                 print(txt)
 
-                returnCode = call(cmd, shell=True, cwd="./Code/")
+                returnCode = call(cmd, shell=True, cwd="./code/")
 
                 if returnCode != 0:
                     txt = "*"*80 +"\nError on " + args + "\n" + "*"*80
@@ -42,3 +43,5 @@ if __name__ == "__main__":
     with open(file_name, "a") as file:
         file.write(txt + "\n")
     print(txt)
+
+    returnCode = call("./moveOutput.sh", shell=True)
