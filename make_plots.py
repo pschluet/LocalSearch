@@ -26,7 +26,7 @@ def load_data():
             data[key] = []
 
         # Replace actual quality with relative error in percent
-        opt = [x[1] for x in OPT_VALS if x[0] + ".graph" in f_name]
+        opt = [x[1] for x in OPT_VALS if x[0] + "_" in f_name]
         new_data[:,1] = (new_data[:,1] - opt) / opt * 100
 
         data[key].append(new_data)
@@ -89,8 +89,7 @@ def get_percentage_solved(inst_data, col_a, lim_a, col_b, lim_b):
 
 def get_key_from_file_path(f_path):
     s1 = re.sub(r"output/", "", f_path)
-    s2 = re.sub(r"\.graph", "", s1)
-    return re.sub(r"_600_.+", "", s2)
+    return re.sub(r"_600_.+", "", s1)
 
 def get_all_data_lims(data, data_keys, column):
     all_vals = unpack_values(data, data_keys, column)
