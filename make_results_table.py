@@ -4,9 +4,9 @@ import numpy as np
 
 class LatexTableBuilder:
     HEADER = textwrap.dedent(r"""
-    \begin{table}[h]
+    \begin{table*}[h]
     \caption{Algorithm Performance}
-    \label{algperf}
+    \label{table:algperf}
     \begin{tabular}{lrrrrrr}
     \toprule
         & \multicolumn{3}{l}{Local Search 1} & \multicolumn{3}{l}{Local Search 2} \\ \midrule
@@ -16,7 +16,7 @@ class LatexTableBuilder:
     FOOTER = textwrap.dedent(r"""
     \bottomrule
     \end{tabular}
-    \end{table}
+    \end{table*}
     """)
 
     def __init__(self):
@@ -81,7 +81,7 @@ class DataLoader:
         self.alg2_rel_err = alg2_data[2]
 
     def __load_data(self, algorithm):
-        file_names = glob("output/*" + self.instance_name + ".graph*" + algorithm + "*.trace")
+        file_names = glob("output/*" + self.instance_name + "_" + algorithm + "_*.trace")
 
         if not file_names:
             return
