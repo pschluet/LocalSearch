@@ -6,35 +6,38 @@ This file contains logic for parsing the command-line arguments.
 
 import com.ps.enums.AlgorithmType;
 import org.apache.commons.cli.*;
+import org.apache.commons.io.FilenameUtils;
 
 import java.util.Objects;
 
 public class InputArgs {
 
-    protected final String fileName;
-    protected final int cutoffTimeSec;
-    protected final int randomSeed;
-    protected final AlgorithmType algorithmType;
+    private final String filePath;
+    private final String instanceName;
+    private final int cutoffTimeSec;
+    private final int randomSeed;
+    private final AlgorithmType algorithmType;
 
-    //public InputArgs(String fileName, int cutoffTimeSec, int randomSeed, AlgorithmType algorithmType) {
     public InputArgs(String[] cmdLineArgs) {
 
         CommandLine cmd = parseArgs(cmdLineArgs);
 
-        this.fileName = cmd.getOptionValue("fileName");
+        this.filePath = cmd.getOptionValue("filePath");
+        this.instanceName =  FilenameUtils.getBaseName(cmd.getOptionValue("filePath"));
         this.cutoffTimeSec = Integer.parseInt(cmd.getOptionValue("time"));
         this.randomSeed = Integer.parseInt(cmd.getOptionValue("seed"));
         this.algorithmType = Objects.equals(cmd.getOptionValue("algorithm"), "LS1") ? AlgorithmType.LocalSearch1 :
                 AlgorithmType.LocalSearch2;
     }
 
-    public String getFileName() { return fileName; }
+    public String getFilePath() { return filePath; }
+    public String getInstanceName() { return instanceName; }
     public int getCutoffTimeSec() { return cutoffTimeSec; }
     public int getRandomSeed() { return randomSeed; }
     public AlgorithmType getAlgorithmType() { return algorithmType; }
 
     public String getFileNameBase() {
-        return fileName + "_" +
+        return instanceName + "_" +
                 algorithmType.toString() + "_" +
                 String.valueOf(cutoffTimeSec) + "_" +
                 String.valueOf(randomSeed);
@@ -44,7 +47,7 @@ public class InputArgs {
         Options options = new Options();
         //exec -inst <filename> -alg [BnB|Approx|LS1|LS2] -time <cutoff in seconds> -seed <random seed>
 
-        Option input1 = new Option("inst", "fileName", true, "input file path");
+        Option input1 = new Option("inst", "filePath", true, "input file path");
         input1.setRequired(true);
         options.addOption(input1);
 
