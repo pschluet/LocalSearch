@@ -96,7 +96,7 @@ class DataLoader:
         # Take averages and compute relative sizes
         time_sec = data[:,0].mean()
         vc_size = data[:,1].mean()
-        rel_err = (vc_size - self.opt_vc_size) / self.opt_vc_size
+        rel_err = round((vc_size - self.opt_vc_size) / self.opt_vc_size, 2)
 
         return (time_sec, vc_size, rel_err)
 
