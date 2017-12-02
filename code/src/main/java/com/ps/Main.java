@@ -24,7 +24,7 @@ public class Main {
         InputArgs inputArgs = new InputArgs(args);
 
         // Read input data
-        UndirectedGraph<Vertex,DefaultEdge> graph = Utils.readDataFile("../Data/" + inputArgs.fileName);
+        UndirectedGraph<Vertex,DefaultEdge> graph = Utils.readDataFile("./Data/" + inputArgs.fileName);
 
         // Run one of the algorithms depending on the command line arguments supplied
         Algorithm algorithm;
@@ -36,7 +36,7 @@ public class Main {
         Solution solution = algorithm.run(graph);
 
         // Write the output files
-        Utils.writeSolutionFile(solution, "../output/" + inputArgs.getFileNameBase() + ".sol");
-        Utils.writeTraceFile(solution, "../output/" + inputArgs.getFileNameBase() + ".trace");
+        Utils.writeSolutionFile(solution, "./output/" + inputArgs.getFileNameBase() + ".sol");
+        Utils.writeTraceFile(solution, "./output/" + inputArgs.getFileNameBase() + ".trace");
     }
 }
