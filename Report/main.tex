@@ -12,7 +12,7 @@
 
 \title{Local Search Algorithms for Minimum Vertex Cover}
 
-\author{Paul Schlueter}
+\author{\textbf{Paul Schlueter}}
 \affiliation{%
   \institution{College of Computing\\Georgia Institute of Technology}
 }
@@ -211,7 +211,17 @@ In addition to the runs used to populate Table \ref{table:algperf}, the \textit{
 \section{Discussion}
 As shown in Table \ref{table:algperf}, LOCAL-SEARCH-VC-2 obtains similar performance to LOCAL-SEARCH-VC-1 in significantly less time. On average, it takes about 53\% of the time to obtain a solution that has 1.06 times as much relative error. In two instances (email and power) LOCAL-SEARCH-VC-2 actually has lower relative error.
 
+The QRTDs (Figures \ref{figure:qrtd_power} and \ref{figure:qrtd_star2}) show the LOCAL-SEARCH-VC-1 performance on the left and the LOCAL-SEARCH-VC-2 performance on the right with the same solution quality curves plotted for both algorithms. These figures show the two algorithms being somewhat similar when first starting out (at higher relative errors), but LOCAL-SEARCH-VC-2 has much shorter run times for the lower relative errors. This is to be expected due to the fact that they use the same approximation algorithm to determine the initial vertex cover.
+
+A similar trend is shown in the SQD plots (Figures \ref{figure:sqd_power} and \ref{figure:sqd_star2}). The start and end curves show an SQD curve in a similar place, but LOCAL-SEARCH-VC-2 gets there in roughly 20\% of the time on average (for these two graph instances).
+
+Not only does the LOCAL-SEARCH-VC-2 algorithm run more quickly, but it also has a tighter distribution on its running times as shown by the running time box plots in Figures \ref{figure:boxplot_power} and \ref{figure:boxplot_star2}.
+
 \section{Conclusion}
+
+This paper presents two local search algorithms based on the framework of the FastVC algorithm \cite{cai2015fastvc}. They differ from FastVC in the way they find the initial vertex cover as well as how they remove and exchange vertices at each iteration. LOCAL-SEARCH-VC-2 changes the number of vertices it removes at each iteration based on the current size of the candidate solution. As a result, it achieves a similar quality to LOCAL-SEARCH-VC-1, but it takes half the time to get there on average.
+
+Both algorithms presented here achieve a similar quality vertex cover of within 8\% of optimal or better for all graphs tested, and the LOCAL-SEARCH-VC-2 algorithm achieves this result in 10 seconds or less. In other words, they achieve good vertex cover sizes in reasonable times for graphs of significant size that would prove to be problematic for other algorithm classes such as exact algorithms.
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{citations} 
