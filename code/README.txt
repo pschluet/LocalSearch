@@ -29,11 +29,11 @@ Code Structure
 Execution Instructions
 ===============================================================================
 - Ensure Java 8 runtime is installed
-- Main-1.0-SNAPSHOT.jar is the executable .jar file
-- Change to the directory that contains Main-1.0-SNAPSHOT.jar
+- Main.jar is the executable .jar file
+- Change to the directory that contains Main.jar
 - The following shows an example of running via command line:
 
-	java -jar Main-1.0-SNAPSHOT.jar -alg LS2 -inst ../Data/email.graph -seed 234234 -time 600
+	java -jar Main.jar -alg LS2 -inst ../Data/email.graph -seed 234234 -time 600
 
 - The above example takes a path to the data file for the -inst argument, and
   output files are written to the same folder as the executable .jar.
@@ -45,6 +45,6 @@ Build Instructions
 - Install the latest version of Apache Maven (3.5.0)
 - Change to the directory that contains the pom.xml file
 - Run the following Maven command to build an executable .jar called 
-  Main-1.0-SNAPSHOT.jar. It is created in the same folder as the pom.xml file.
+  Main.jar. It is created in the same folder as the pom.xml file.
 
 	mvn clean compile package

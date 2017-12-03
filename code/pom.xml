@@ -48,7 +48,7 @@
                                     <mainClass>com.ps.Main</mainClass>
                                 </transformer>
                             </transformers>
-                            <outputFile>./${project.artifactId}-${project.version}.jar</outputFile>
+                            <outputFile>./${project.artifactId}.jar</outputFile>
                         </configuration>
                     </execution>
                 </executions>
@@ -61,7 +61,7 @@
                         <fileset>
                             <directory>./</directory>
                             <includes>
-                                <include>${project.artifactId}-${project.version}.jar</include>
+                                <include>${project.artifactId}.jar</include>
                             </includes>
                             <followSymlinks>false</followSymlinks>
                         </fileset>
