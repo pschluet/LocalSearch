@@ -1,5 +1,9 @@
 package com.ps.datacontainers;
 
+/*
+This class represents a vertex on the graph. It is used to store important properties of a vertex.
+*/
+
 public class Vertex {
     protected int id;
     protected int score;
