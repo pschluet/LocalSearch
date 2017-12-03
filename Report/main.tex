@@ -19,7 +19,7 @@
 \email{paul@paulschlueter.com}
 
 \begin{abstract}
-Sample abstract text
+This paper develops two local search algorithms to find solutions for the Minimum Vertex Cover problem. They are based on a common framework found in the literature \cite{cai2015fastvc}, but they differ in the way they find their initial vertex cover and the way they remove and exchange vertices at each iteration of the local search. Both algorithms achieve similar solution qualities; however, one of them has a much shorter running time due to the innovative way that it removes vertices from the candidate solution as it iterates. The paper presents empirical results based on experiments using graph instances from the 10th DIMACS Challenge\footnote{https://www.cc.gatech.edu/dimacs10/}.
 \end{abstract}
 
 \keywords{CSE 6140, Minimum Vertex Cover, Local Search}
@@ -46,7 +46,7 @@ The Minimum Vertex Cover (MVC) problem is the optimization version of the well-k
 
 As such, there have been a wide variety of local search algorithms proposed for the MVC problem due to their ability to find solutions for large instances in reasonable times. These algorithms use advanced heuristics such as max-gain vertex pair selection \cite{richter_helmert_gretton}, edge weighting \cite{richter_helmert_gretton, cai2010}, k-improvement \cite{andrade_resende_werneck}, configuration checking \cite{cai_su_sattar_2011}, minimum loss removing and two-stage exchange \cite{cai2013numvc}. 
 
-Most of these algorithms are evaluated an the DIMACS and BHOSLIB benchmarks from the academic community; however, there has also been an effort to design algorithms (e.g. FastVC in \cite{cai2015fastvc}) to handle much larger graph instances. The FastVC algorithm is among the state-of-the-art in its performance on the MVC problem for massive graphs \cite{cai2015fastvc}, and, for this reason, the algorithms developed in this paper are modeled after this general framework.
+Most of these algorithms are evaluated an the DIMACS\footnote{https://www.cc.gatech.edu/dimacs10/} and BHOSLIB benchmarks from the academic community; however, there has also been an effort to design algorithms (e.g. FastVC in \cite{cai2015fastvc}) to handle much larger graph instances. The FastVC algorithm is among the state-of-the-art in its performance on the MVC problem for massive graphs \cite{cai2015fastvc}, and, for this reason, the algorithms developed in this paper are modeled after this general framework.
 
 \section{Algorithms}
 Both of the local search algorithms proposed in this paper are similar in their top level structure, however, they differ in how they implement certain steps. Therefore, I will present the structure for the first algorithm then discuss how the second algorithm differs.
@@ -119,7 +119,7 @@ This alteration does not change the time complexity or space complexity of the a
 The advantage of this approach is that the algorithm can complete its search much more quickly, and, as it gets closer to the optimal solution, fewer vertices are removed at each step. This allows for a more fine-grained search once the solution is closer to the optimal. As shown in section \ref{sec:eval}, it obtains similar performance to LOCAL-SEARCH-VC-1 in significantly less time.
 
 \section{Empirical Evaluation} \label{sec:eval}
-In order to evaluate the performance of LOCAL-SEARCH-VC-1 and LOCAL-SEARCH-VC-2, the algorithms were exercised on 11 different graph instances (some real and some random) taken from the 10th DIMACS challenge. 
+In order to evaluate the performance of LOCAL-SEARCH-VC-1 and LOCAL-SEARCH-VC-2, the algorithms were exercised on 11 different graph instances (some real and some random) taken from the 10th DIMACS Challenge\footnote{https://www.cc.gatech.edu/dimacs10/}. 
 Each algorithm was run 10 times (with a different random seed each time) for each data set, and a cutoff time of 10 minutes was used for each run. Table \ref{table:platfm} lists the details of the platform used.
 \begin{table}[h]
 	\caption{Platform Characteristics}
