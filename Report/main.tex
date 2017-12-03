@@ -104,9 +104,9 @@ Algorithm \ref{alg:ls1} shows the overall structure of the algorithm. The APPROX
 	\label{alg:avc}
 \end{algorithm}
 
-Given a graph with vertex set $V$ and edge set $E$, the time complexity for a single time through the \textbf{while} loop in Algorithm \ref{alg:ls1} is $\bigo{VE}$. The most expensive operation that drives this time complexity is the calculation of the scores for each of the vertices in the candidate vertex cover solution, $C$. To update the scores, we must loop through each of the vertices, $v_i$, in $C$, and inside this loop, we must loop through each of the edges connected to $v_i$. The space complexity for Algorithm \ref{alg:ls1} is $\bigo{V + E}$ because we must store the graph itself.
+Given a graph with vertex set $V$ and edge set $E$, the time complexity for a single time through the \textbf{while} loop in Algorithm \ref{alg:ls1} is $\bigo{|V||E|}$. The most expensive operation that drives this time complexity is the calculation of the scores for each of the vertices in the candidate vertex cover solution, $C$. To update the scores, we must loop through each of the vertices, $v_i$, in $C$, and inside this loop, we must loop through each of the edges connected to $v_i$. The space complexity for Algorithm \ref{alg:ls1} is $\bigo{V + E}$ because we must store the graph itself.
 
-The time complexity for Algorithm \ref{alg:avc} is $\bigo{V + E}$ \cite{intro_alg_2009}, and its space complexity is $\bigo{V + E}$ because we must store the graph.  
+The time complexity for Algorithm \ref{alg:avc} is $\bigo{|V| + |E|}$ \cite{intro_alg_2009}, and its space complexity is $\bigo{|V| + |E|}$ because we must store the graph.  
 
 \subsection{LOCAL-SEARCH-VC-2}
 The second local search algorithm has the same overall structure as Algorithm \ref{alg:ls1} except that it removes multiple vertices once a vertex cover is found. The number of vertices it removes is not a constant, rather, it scales with the current size of the vertex cover candidate solution. More specifically, in place of line 5 in Algorithm \ref{alg:ls1}, we remove the $n$ vertices with the lowest $scores$ where
@@ -114,7 +114,7 @@ The second local search algorithm has the same overall structure as Algorithm \r
 	n = \max(0.01 * \textrm{the current number of vertices in $C$}, 1)
 \end{equation}
 
-This alteration does not change the time complexity or space complexity of the algorithm. They remain $\bigo{VE}$ and $\bigo{V + E}$ respectively.
+This alteration does not change the time complexity or space complexity of the algorithm. They remain $\bigo{|V||E|}$ and $\bigo{|V| + |E|}$ respectively.
 
 The advantage of this approach is that the algorithm can complete its search much more quickly, and, as it gets closer to the optimal solution, fewer vertices are removed at each step. This allows for a more fine-grained search once the solution is closer to the optimal. As shown in section \ref{sec:eval}, it obtains similar performance to LOCAL-SEARCH-VC-1 in significantly less time.
 
@@ -142,6 +142,8 @@ The average vertex cover size achieved along with the average time taken to reac
 
 Table \ref{table:algperf} summarizes the results for both algorithms on all graph data sets.
 
+In addition to the runs used to populate Table \ref{table:algperf}, the \textit{power} and \textit{star2} graph instances were run 100 times for each algorithm (totaling 400 runs) to obtain a more detailed look at algorithm performance. Figures \ref{figure:qrtd_power} and \ref{figure:qrtd_star2} are Qualified Run-Time Distribution (QRTD) plots from these runs for the \textit{power} and \textit{star2} instances respectively. Figures \ref{figure:sqd_power} and \ref{figure:sqd_star2} are Solution Quality Distribution (SQD) plots for the \textit{power} and \textit{star2} instances respectively. Figures \ref{figure:boxplot_power} and \ref{figure:boxplot_star2} show a statistical box plot representation of the time required for each algorithm to reach a certain relative error threshold for the \textit{power} and \textit{star2} instances respectively. In all of these figures (figures \ref{figure:qrtd_power} through \ref{figure:boxplot_star2}) ``LS1" and ``LS2" refer to the LOCAL-SEARCH-VC-1 and LOCAL-SEARCH-VC-2 algorithms respectively.
+
 \begin{table*}[h]
 	\caption{Algorithm Performance}
 	\label{table:algperf}
@@ -163,6 +165,48 @@ Table \ref{table:algperf} summarizes the results for both algorithms on all grap
 		\bottomrule
 	\end{tabular}
 \end{table*}
+
+\begin{figure*}[h]
+	\centering
+	\includegraphics[width=400px]{plots/qrtd_power.png}
+	\caption{QRTDs for \textit{power} Graph}
+	\label{figure:qrtd_power}
+\end{figure*}
+
+\begin{figure*}[h]
+	\centering
+	\includegraphics[width=400px]{plots/qrtd_star2.png}
+	\caption{QRTDs for \textit{star2} Graph}
+	\label{figure:qrtd_star2}
+\end{figure*}
+
+\begin{figure*}[h]
+	\centering
+	\includegraphics[width=400px]{plots/sqd_power.png}
+	\caption{SQDs for \textit{power} Graph}
+	\label{figure:sqd_power}
+\end{figure*}
+
+\begin{figure*}[h]
+	\centering
+	\includegraphics[width=400px]{plots/sqd_star2.png}
+	\caption{SQDs for \textit{star2} Graph}
+	\label{figure:sqd_star2}
+\end{figure*}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=250px]{plots/boxplot_power.png}
+	\caption{Running Times for \textit{power} Graph}
+	\label{figure:boxplot_power}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=250px]{plots/boxplot_star2.png}
+	\caption{Running Times for \textit{star2} Graph}
+	\label{figure:boxplot_star2}
+\end{figure}
 
 \section{Discussion}
 As shown in Table \ref{table:algperf}, LOCAL-SEARCH-VC-2 obtains similar performance to LOCAL-SEARCH-VC-1 in significantly less time. On average, it takes about 53\% of the time to obtain a solution that has 1.06 times as much relative error. In two instances (email and power) LOCAL-SEARCH-VC-2 actually has lower relative error.
