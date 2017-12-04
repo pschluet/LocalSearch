@@ -25,7 +25,7 @@ if __name__ == "__main__":
             for i in range(1,num_random_seeds + 1):
                 seed = int(random.randrange(0,1e5))
                 args = "-inst {} -alg {} -time {} -seed {}".format(data_file, algorithm, time_limit_sec, seed)
-                cmd = "java -jar Main-1.0-SNAPSHOT.jar {}".format(args)
+                cmd = "java -jar Main.jar {}".format(args)
 
                 txt = "Running {}".format(args)
                 with open(file_name, "a") as file:
