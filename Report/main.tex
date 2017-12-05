@@ -110,9 +110,31 @@ The time complexity for Algorithm \ref{alg:avc} is $\bigo{|V| + |E|}$ \cite{intr
 
 \subsection{LOCAL-SEARCH-VC-2}
 The second local search algorithm has the same overall structure as Algorithm \ref{alg:ls1} except that it removes multiple vertices once a vertex cover is found. The number of vertices it removes is not a constant, rather, it scales with the current size of the vertex cover candidate solution. More specifically, in place of line 5 in Algorithm \ref{alg:ls1}, we remove the $n$ vertices with the lowest $scores$ where
-\begin{equation}
+\begin{equation*}
 	n = \max(0.01 * \textrm{the current number of vertices in $C$}, 1)
-\end{equation}
+\end{equation*}
+
+Algorithm \ref{alg:ls2} shows the full pseudocode for LOCAL-SEARCH-VC-2. The only difference between LOCAL-SEARCH-VC-1 and LOCAL-SEARCH-VC-2 is that we have replaced line 5 in Algorithm \ref{alg:ls1} with lines 5 and 6 in Algorithm \ref{alg:ls2}. 
+\begin{algorithm}[h]
+	\SetAlgoNoLine
+	\KwIn{Graph with vertex set $V$ and edge set $E$}
+	\KwOut{Set of vertices, $C*$, that form a vertex cover}
+	$C$ = initial vertex cover from APPROX-VERTEX-COVER\\
+	\While{elapsed time < cutoff time limit}{
+		\If{$C$ is a vertex cover}{
+			$C*$ = $C$\\
+			$n = \max(0.01 * \textrm{the current number of vertices in $C$}, 1)$\\
+			Remove the $n$ vertices in $C$ with the lowest $scores$\\
+		}
+		$u$ = the vertex in $C$ with the lowest $score$\\
+		$C$ = $C$ $\setminus$ \{$u$\}\\
+		$v$ = a random uncovered edge in $V \setminus C$\\
+		$C$ = $C$ $\cup$ \{$v$\}
+	}
+	\Return $C*$
+	\caption{LOCAL-SEARCH-VC-2}
+	\label{alg:ls2}
+\end{algorithm}
 
 This alteration does not change the time complexity or space complexity of the algorithm. They remain $\bigo{|V||E|}$ and $\bigo{|V| + |E|}$ respectively.
 
